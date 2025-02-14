@@ -4,6 +4,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Table, Button, Form, Card, Pagination } from "react-bootstrap";
 import { Plus, ThreeDotsVertical } from "react-bootstrap-icons";
 import axios from "axios";
+import { Link } from "react-router-dom";
+
 
 /* const data = [
     { id: "#B-10021-31", title: "The Happiness Hypothesis", author: "Jonathan Haidt", count: 2 },
@@ -31,9 +33,12 @@ const ViewAll = () => {
                     <h1 className="text-danger fw-bold">All<span className="text-success">Value</span></h1>
                 </div>
                 <div className="d-flex justify-content-end mb-3">
-                    <Button variant="outline-danger" className="d-flex align-items-center me-4">
-                        <Plus className="me-2" /> Releasing
-                    </Button>
+                    <Link to="/add-record" style={{ textDecoration: 'none' }}>
+                        <Button variant="outline-danger" className="d-flex align-items-center me-4">
+                            <Plus className="me-2" /> Releasing
+                        </Button>
+                    </Link>
+                    
                     <Button variant="outline-success" className="d-flex align-items-center">
                         <Plus className="me-2" /> Turn Over
                     </Button>
