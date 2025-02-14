@@ -43,9 +43,9 @@ const ViewAll = () => {
                         <Plus className="me-2" /> Turn Over
                     </Button>
                 </div>
-                <div className="d-flex justify-content-end mb-3">
-                    <Form.Control type="text" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} className="me-2" />
-                    <Button variant="primary">Search</Button>
+                <div className="d-flex justify-content-start mb-3">
+                    <Form.Control type="text" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} className="me-2 w-50" />
+                    <Button variant="primary" className="ps-4 pe-4">Search</Button>
                 </div>
                 <Card>
                     <Card.Body>
