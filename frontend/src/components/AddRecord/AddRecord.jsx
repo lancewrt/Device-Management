@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './AddRecord.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Table, Button, Form, Card, Pagination } from "react-bootstrap";
-import { Plus, ThreeDotsVertical, ArrowRight } from "react-bootstrap-icons";
+import { Plus, ThreeDotsVertical, ArrowRight, ArrowLeft } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 
 const AddRecord = () => {
@@ -210,17 +210,22 @@ const AddRecord = () => {
                         <div className="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
                             <form className="d-flex justify-content-center">
                                 <div className="row mt-3 text-start w-100 p-3">
-                                    <div className="col-md-12 mb-3 ">
+                                    <div className="col-md-12 mb-1   ">
                                         <label htmlFor="deviceModel" className="form-label">Notes (Device condition before releasing)</label>
-                                        <input type="text" className="form-control h-75 d-inline-block" id="deviceModel" placeholder="Device Model" h-50 />
+                                        {/* <input type="text" className="form-control h-75 d-inline-block" id="deviceModel" placeholder="Device Model" h-50 /> */}
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="8"></textarea>
                                     </div>
                                     
                                 </div>
                             </form>
                             <div className="d-flex justify-content-end mb-3 pe-1">
                                 <Button type='button' className="d-flex align-items-center me-4" onClick={handleNextClick}>
+                                <ArrowLeft className="me-2" />&nbsp;Prev
+                                </Button>
+                                <Button type='button' className="d-flex align-items-center me-4" onClick={handleNextClick}>
                                     Finish &nbsp;<ArrowRight className="me-2" />
                                 </Button>
+                                
                             </div>
                         </div>
 
