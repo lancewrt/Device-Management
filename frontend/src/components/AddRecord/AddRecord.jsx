@@ -51,41 +51,28 @@ const AddRecord = () => {
                 <h3 className='text-start fw-bold'>Add Record</h3>
                 <Card> 
                     <Card.Body>
-                    {/* <ul class="nav nav-tabs">
-                        <li class="nav-item">
-                            <a className="nav-link active" aria-current="page" href="#">Device Info</a>
-                        </li>
-                        <li class="nav-item">
-                            <a className="nav-link" href="#">Employee Info</a>
-                        </li>
-                        <li className="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li className="nav-item">
-                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                        </li>
-                    </ul> */}
+                    
                     <nav>
                         <div className="nav nav-tabs" id="nav-tab" role="tablist">
                             <button className="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Device Info</button>
                             <button className="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Employee Info</button>
-                            <button className="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Remarks</button>
+                            <button className="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Notes</button>
                         </div>
                     </nav>
                     
-                    <div className="tab-content border-bottom" id="nav-tabContent">
+                    <div className="tab-content border-bottom border-start border-end " id="nav-tabContent">
                         <div className="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                             <form className="d-flex justify-content-center">
-                                <div className="row mt-3 text-start w-100 p-3">
+                                <div className="row mt-3 text-start w-100 ps-3 pe-3 pt-3">
                                     <div className="col-md-5 ">
                                         <label htmlFor="deviceModel" className="form-label">Model</label>
                                         <input type="text" className="form-control" id="deviceModel" placeholder="Device Model" />
                                     </div>
-                                    <div className="col-md-5 ">
+                                    <div className="col-md-4 ">
                                         <label htmlFor="serialId" className="form-label">Serial ID</label>
                                         <input type="text" className="form-control" id="serialId" placeholder="Serial ID" />
                                     </div>
-                                    <div className="col-md-2 ">
+                                    <div className="col-md-3 ">
                                         <label htmlFor="serialId" className="form-label">Device Type</label>
                                         <select class="form-select" aria-label="Default select example">
                                             <option selected disabled>Open this select menu</option>
@@ -93,12 +80,11 @@ const AddRecord = () => {
                                             <option value="DESKTOP">DESKTOP</option>
                                         </select>
                                     </div>
-                                
                                 </div>
                             </form>
                             <form className="d-flex justify-content-center">
                                 <div className="row text-start w-100 p-3">
-                                    <div className="col-md-2 mb-2">
+                                    <div className="col-md-5">
                                         <label htmlFor="serialId" className="form-label">Device Brand</label>
                                         <select class="form-select" aria-label="Default select example">
                                             <option selected disabled>Open this select menu</option>
@@ -110,10 +96,23 @@ const AddRecord = () => {
                                             <option value="MSI">MSI</option>
                                         </select>
                                     </div>
-                                    <div className="col-md-10 mb-2">
+                                    <div className="col-md-7 ">
                                         <label htmlFor="deviceModel" className="form-label">Specification</label>
                                         <input type="text" className="form-control" id="deviceModel" placeholder="Device Specification" />
                                     </div>
+                                </div>
+                            </form>
+                            <form className="d-flex justify-content-center">
+                                <div className="row mb-3 text-start w-100 ps-3 pe-3">
+                                    <div className="col-md-5">
+                                        <label htmlFor="deviceModel" className="form-label">Device Name</label>
+                                        <input type="text" className="form-control" id="deviceModel" placeholder="Device Name" />
+                                    </div>
+                                    <div className="col-md-7">
+                                        <label htmlFor="serialId" className="form-label">Last Device User</label>
+                                        <input type="text" className="form-control" id="serialId" placeholder="Last Device User" />
+                                    </div>
+                                    
                                 </div>
                             </form>
                             <div className="d-flex justify-content-end mb-3 pe-1">
@@ -125,7 +124,7 @@ const AddRecord = () => {
 
                         <div className="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                             <form className="d-flex justify-content-center">
-                                <div className="row mt-3 text-start w-100 p-3">
+                                <div className="row mt-3 text-start w-100 pe-3 ps-3 pt-3">
                                     <div className="col-md-5">
                                         <label htmlFor="deviceModel" className="form-label">First Name</label>
                                         <input type="text" className="form-control" id="deviceModel" placeholder="First Name" />
@@ -143,7 +142,7 @@ const AddRecord = () => {
 
                             <form className="d-flex justify-content-center">
                                 <div className="row text-start w-100 p-3">
-                                    <div className="col-md-4">
+                                    <div className="col-md-4 mb-3">
                                         <label htmlFor="serialId" className="form-label">Department</label>
                                         <select class="form-select" aria-label="Default select example">
                                             <option selected disabled>Open this select menu</option>
@@ -161,7 +160,7 @@ const AddRecord = () => {
                                             <option value="Merchandising">Training</option>
                                         </select>
                                     </div>
-                                    <div className="col-md-4">
+                                    <div className="col-md-4 mb-3">
                                         <label htmlFor="serialId" className="form-label">Designation</label>
                                         <select class="form-select" aria-label="Default select example">
                                             <option selected disabled>Open this select menu</option>
@@ -173,7 +172,7 @@ const AddRecord = () => {
                                             <option value="SAP">SAP</option>
                                         </select>
                                     </div>
-                                    <div className="col-md-4">
+                                    <div className="col-md-4 mb-3">
                                         <label htmlFor="serialId" className="form-label">Business Unit</label>
                                         <select class="form-select" aria-label="Default select example">
                                             <option selected disabled>Open this select menu</option>
@@ -186,9 +185,13 @@ const AddRecord = () => {
                                         </select>
                                     </div>
                                     
-                                    <div className="col-md-12">
+                                    <div className="col-md-8">
                                         <label htmlFor="deviceModel" className="form-label">Location</label>
                                         <input type="text" className="form-control" id="deviceModel" placeholder="Location" />
+                                    </div>
+                                    <div className="col-md-4">
+                                        <label htmlFor="deviceModel" className="form-label">Release Date</label>
+                                        <input type="date" className="form-control" id="date"/>
                                     </div>
                                 
                                 </div>
@@ -207,16 +210,18 @@ const AddRecord = () => {
                         <div className="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
                             <form className="d-flex justify-content-center">
                                 <div className="row mt-3 text-start w-100 p-3">
-                                    <div className="col-md-6 mb-3">
-                                        <label htmlFor="deviceModel" className="form-label">Model</label>
-                                        <input type="text" className="form-control" id="deviceModel" placeholder="Device Model" />
+                                    <div className="col-md-12 mb-3 ">
+                                        <label htmlFor="deviceModel" className="form-label">Notes (Device condition before releasing)</label>
+                                        <input type="text" className="form-control h-75 d-inline-block" id="deviceModel" placeholder="Device Model" h-50 />
                                     </div>
-                                    <div className="col-md-6 mb-3">
-                                        <label htmlFor="serialId" className="form-label">Serial ID</label>
-                                        <input type="text" className="form-control" id="serialId" placeholder="Serial ID" />
-                                    </div>
+                                    
                                 </div>
                             </form>
+                            <div className="d-flex justify-content-end mb-3 pe-1">
+                                <Button type='button' className="d-flex align-items-center me-4" onClick={handleNextClick}>
+                                    Finish &nbsp;<ArrowRight className="me-2" />
+                                </Button>
+                            </div>
                         </div>
 
                         
