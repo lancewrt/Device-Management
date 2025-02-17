@@ -63,11 +63,22 @@ const ViewAll = () => {
                         
                         {data.map((item, index) => (
                             <tr key={index}>
-                            <td>{item.first_name} {item.last_name}</td>
-                            <td>{item.department}</td>
-                            <td>{item.designation}</td>
-                            <td>{item.device_type}</td>
-                            <td><ThreeDotsVertical /></td>
+                                <td>{item.first_name} {item.last_name}</td>
+                                <td>{item.department}</td>
+                                <td>{item.designation}</td>
+                                <td>{item.device_type}</td>
+                                <td>
+                                    <button class="btn-sm border-0 border bg-transparent" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <ThreeDotsVertical />
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#">View</a></li>
+                                        <li><a class="dropdown-item" href="#">Edit</a></li>
+                                        
+                                    </ul>
+                                    
+                                    
+                                </td>
                             </tr>
                         ))}
                         </tbody>
