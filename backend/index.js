@@ -32,7 +32,7 @@ db.connect(err => {
 
 app.get('/api/employees', (req, res) => {
     db.query(`
-        SELECT e.first_name, e.last_name, d.brand_name AS device, de.name AS department, des.name AS designation, d.device_type AS device_type
+        SELECT e.employee_id, e.first_name, e.last_name, d.brand_name AS device, de.name AS department, des.name AS designation, d.device_type AS device_type
         FROM employee e 
         JOIN assignment a ON e.employee_id = a.employee_id
         JOIN device d ON a.device_id = d.device_id  
@@ -60,21 +60,24 @@ app.post('/addRecord', async (req, res) => {
         await connection.beginTransaction();
         // 2. Insert into department (if new) and get ID
         const [departmentResult] = await connection.execute(
-            `INSERT IGNORE INTO department (name) VALUES (?)`,
+            `INSERT INTO department (name) VALUES (?)
+            ON DUPLICATE KEY UPDATE department_id = LAST_INSERT_ID(department_id)`,
             [department]
         );
         const departmentId = departmentResult.insertId;
 
         
         const [designationResult] = await connection.execute(
-            `INSERT IGNORE INTO designation (name) VALUES (?)`,
+            `INSERT INTO designation (name) VALUES (?)
+            ON DUPLICATE KEY UPDATE designation_id = LAST_INSERT_ID(designation_id)`,
             [designation]
         );
         const designationId = designationResult.insertId;
 
         // 4. Insert into location (if new) and get ID
         const [locationResult] = await connection.execute(
-            `INSERT IGNORE INTO location (name) VALUES (?)`,
+            `INSERT INTO location (name) VALUES (?)
+            ON DUPLICATE KEY UPDATE location_id = LAST_INSERT_ID(location_id)`,
             [location]
         );
         const locationId = locationResult.insertId;
@@ -120,6 +123,60 @@ app.post('/addRecord', async (req, res) => {
         connection.release();
     }
 });
+
+app.get('/view-info/:employee_id', (req, res) => {
+    const { employee_id } = req.params;
+  
+    const query = `
+      SELECT 
+        e.employee_id,
+        e.last_name,
+        e.first_name,
+        e.middle_name,
+        e.business_unit,
+        d.name AS department_name,
+        des.name AS designation_name,
+        l.name AS location_name,
+        a.assignment_id,
+        a.device_id,
+        a.last_device_user,
+        a.date_return,
+        a.notes,
+        a.release_date,
+        dev.device_name,
+        dev.serial_number,
+        dev.device_type,
+        dev.brand_name,
+        dev.model,
+        dev.specifications,
+        da.device_account_id,
+        da.dusername,
+        da.dpassword
+      FROM employee e
+      LEFT JOIN department d ON e.department_id = d.department_id
+      LEFT JOIN designation des ON e.designation_id = des.designation_id
+      LEFT JOIN location l ON e.location_id = l.location_id
+      LEFT JOIN assignment a ON e.employee_id = a.employee_id
+      LEFT JOIN device dev ON a.device_id = dev.device_id
+      LEFT JOIN device_account da 
+        ON e.employee_id = da.employee_id AND da.device_id = a.device_id
+      WHERE e.employee_id = ?;
+    `;
+  
+    db.query(query, [employee_id], (err, results) => {
+      if (err) {
+        console.error('Error fetching employee info:', err);
+        return res.status(500).json({ error: 'Database error' });
+      }
+  
+      if (results.length === 0) {
+        return res.status(404).json({ message: 'Employee not found' });
+      }
+  
+      res.status(200).json(results);
+    });
+  });
+  
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

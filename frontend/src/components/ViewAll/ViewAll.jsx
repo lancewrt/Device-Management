@@ -23,6 +23,7 @@ const ViewAll = () => {
         axios.get('http://localhost:5000/api/employees')
             .then(response => setData(response.data))
             .catch(error => console.error('Error fetching data:', error));
+
     }, []);
     return (
         <div className="d-flex justify-content-center align-items-center vh-100">
@@ -72,8 +73,8 @@ const ViewAll = () => {
                                         <ThreeDotsVertical />
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">View</a></li>
-                                        <li><a class="dropdown-item" href="#">Edit</a></li>
+                                        <li><Link className="dropdown-item" to={`/view-info/${item.employee_id}`}style={{ textDecoration: 'none' }}>View</Link></li>
+                                        <li><Link className="dropdown-item" to={`/edit-info/${item.employee_id}`}style={{ textDecoration: 'none' }}>Edit</Link></li>
                                         
                                     </ul>
                                     
