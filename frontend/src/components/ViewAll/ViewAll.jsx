@@ -53,9 +53,9 @@ const ViewAll = () => {
                         <thead>
                         <tr className="row text-center">    
                             <th className="col-3">Name</th>
-                            <th className="col">Department</th>
-                            <th className="col">Business Unit</th>
-                            <th className="col">Device Name</th>
+                            <th className="col-2">Department</th>
+                            <th className="col-2">Business Unit</th>
+                            <th className="col-2">Device Name</th>
                             <th className="col">Device Model</th>
                             <th className="col">Device SN</th>
                         </tr>
