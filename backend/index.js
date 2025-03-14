@@ -177,6 +177,20 @@ app.get('/view-info/:employee_id', (req, res) => {
     });
   });
   
+app.get('/departments', (req, res) => {
+    db.query('SELECT * FROM department', (err, results) => {
+        if (err) {
+            res.status(500).send  
+        }
+  
+        if (results.length === 0) {
+          return res.status(404).json({ message: 'Employee not found' });
+        }
+    
+        res.status(200).json(results);
+    });
+});
+
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

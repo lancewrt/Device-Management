@@ -39,9 +39,6 @@ const Employees = () => {
                         </Button>
                     </Link>
                     
-                    {/* <Button variant="outline-success" className="d-flex align-items-center">
-                        <Plus className="me-2" /> Turn Over
-                    </Button> */}
                 </div>
                 <div className="d-flex justify-content-start mb-3">
                     <Form.Control type="text" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} className="me-2 w-50" />

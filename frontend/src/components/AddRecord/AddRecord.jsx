@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './AddRecord.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Table, Button, Form, Card, Pagination } from "react-bootstrap";
@@ -9,6 +9,10 @@ import NavBar from '../NavBar/NavBar';
 
 const AddRecord = () => {
     const [errors, setErrors] = useState({});
+    const [departments, setDepartments] = useState([]);
+    const [businessUnits, setBusinessUnits] = useState([]);
+    const [locations, setLocations] = useState([]);
+    const [designations, setDesignations] = useState([]);
     const [formData, setFormData] = useState({
         fname: '',
         lname: '',
@@ -30,9 +34,25 @@ const AddRecord = () => {
         dpassword: ''
     });
 
+    useEffect(() => {
+        getDepartments();
+    }, []);
+
+    const getDepartments = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/departments');
+            setDepartments(response.data);
+        } catch (error) {
+            console.error('Error:', error.response?.data || error.message);
+            alert('Failed to fetch departments.');
+        }
+    };
+
+
+
     const handleNextClick = () => {
         // Find the currently active tab and move to the next one
-        const activeTab = document.querySelector('.nav-link.active');
+        const activeTab = document.querySelector('#nav-tab .nav-link.active');
         if (activeTab) {
           let nextTab = activeTab.nextElementSibling;
           if (nextTab) {
@@ -42,7 +62,7 @@ const AddRecord = () => {
     };
 
     const handlePreviousClick = () => {
-    const activeTab = document.querySelector('.nav-link.active');
+    const activeTab = document.querySelector('#nav-tab .nav-link.active');
     if (activeTab) {
         const previousTab = activeTab.previousElementSibling;
         if (previousTab) previousTab.click();
@@ -277,7 +297,10 @@ const AddRecord = () => {
                                     <div className="col-md-4 mb-3">
                                         <label htmlFor="serialId" className="form-label">Department</label>
                                         <select className="form-select" aria-label="Default select example" name='department' id='department' value={formData.department} onChange={handleChange}>
-                                            <option selected disabled>Open this select menu</option>
+                                            {departments.map((department, index) => (
+                                                <option key={index} value={department.name}>{department.name}</option>
+                                            ))}
+                                            {/* <option selected disabled>Open this select menu</option>
                                             <option value="Operations">Operations</option>
                                             <option value="Accounting">Accounting</option>
                                             <option value="Human Resources">Human Resources</option>
@@ -289,7 +312,7 @@ const AddRecord = () => {
                                             <option value="Business System">Purchasing</option>
                                             <option value="Marketing">Finance</option>
                                             <option value="Human Resources">Security</option>
-                                            <option value="Merchandising">Training</option>
+                                            <option value="Merchandising">Training</option> */}
                                         </select>
                                         {errors.department && <p style={{ color: 'red' }}>{errors.department}</p>}
                                     </div>
