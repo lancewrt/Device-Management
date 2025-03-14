@@ -5,6 +5,7 @@ import { Table, Button, Form, Card, Pagination } from "react-bootstrap";
 import { Plus, ThreeDotsVertical } from "react-bootstrap-icons";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import NavBar from "../NavBar/NavBar";
 
 
 /* const data = [
@@ -26,13 +27,11 @@ const ViewAll = () => {
 
     }, []);
     return (
-        <div className="d-flex justify-content-center align-items-center top-0">
+        <div className="d-flex justify-content-center align-items-center top-0" style={{margin: "auto"}}>
             {/* <AdminTopNavbar /> */}
             
             <div className="container py-4">
-                <div className="d-flex justify-content-between align-items-center mb-3">
-                    <h1 className="text-danger fw-bold">All<span className="text-success">Value</span></h1>
-                </div>
+                <NavBar />
                 <div className="d-flex justify-content-end mb-3">
                     <Link to="/add-record" style={{ textDecoration: 'none' }}>
                         <Button variant="outline-danger" className="d-flex align-items-center me-4">
@@ -48,16 +47,17 @@ const ViewAll = () => {
                     <Form.Control type="text" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} className="me-2 w-50" />
                     <Button variant="primary" className="ps-4 pe-4">Search</Button>
                 </div>
-                <Card>
-                    <Card.Body>
+                <Card className="border-0">
+                    <Card.Body className="border-0">
                     <Table striped bordered hover>
                         <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Department</th>
-                            <th>Designation</th>
-                            <th>Device Type</th>
-                            <th>Actions</th>
+                        <tr className="row text-center">    
+                            <th className="col-3">Name</th>
+                            <th className="col">Department</th>
+                            <th className="col">Business Unit</th>
+                            <th className="col">Device Name</th>
+                            <th className="col">Device Model</th>
+                            <th className="col">Device SN</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -69,10 +69,10 @@ const ViewAll = () => {
                                 <td>{item.designation}</td>
                                 <td>{item.device_type}</td>
                                 <td>
-                                    <button class="btn-sm border-0 border bg-transparent" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button className="btn-sm border-0 border bg-transparent" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         <ThreeDotsVertical />
                                     </button>
-                                    <ul class="dropdown-menu">
+                                    <ul className="dropdown-menu">
                                         <li><Link className="dropdown-item" to={`/view-info/${item.employee_id}`}style={{ textDecoration: 'none' }}>View</Link></li>
                                         <li><Link className="dropdown-item" to={`/edit-info/${item.employee_id}`}style={{ textDecoration: 'none' }}>Edit</Link></li>
                                         

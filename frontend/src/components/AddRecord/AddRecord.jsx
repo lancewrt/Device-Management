@@ -160,7 +160,7 @@ const AddRecord = () => {
             <div className="container py-4">
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <Link to="/" style={{ textDecoration: 'none' }}>
-                        <h1 className="text-danger fw-bold">All<span className="text-success">Value</span></h1>
+                        {/* <h1 className="text-danger fw-bold">All<span className="text-success">Value</span></h1> */}
                     </Link>
                     {/* <Button variant="outline-warning" className="d-flex align-items-center">
                     <Plus className="me-2" /> Add New
@@ -197,7 +197,7 @@ const AddRecord = () => {
                                     </div>
                                     <div className="col-md-3 ">
                                         <label htmlFor="serialId" className="form-label">Device Type</label>
-                                        <select class="form-select" aria-label="Default select example" id='deviceType' name='deviceType' value={formData.deviceType} onChange={handleChange}>
+                                        <select className="form-select" aria-label="Default select example" id='deviceType' name='deviceType' value={formData.deviceType} onChange={handleChange}>
                                             <option selected disabled>Open this select menu</option>
                                             <option value="LAPTOP">LAPTOP</option>
                                             <option value="DESKTOP">DESKTOP</option>
@@ -210,7 +210,7 @@ const AddRecord = () => {
                                 <div className="row text-start w-100 p-3">
                                     <div className="col-md-5">
                                         <label htmlFor="serialId" className="form-label">Device Brand</label>
-                                        <select class="form-select" aria-label="Default select example" id='deviceBrand' name='deviceBrand' value={formData.deviceBrand} onChange={handleChange}>
+                                        <select className="form-select" aria-label="Default select example" id='deviceBrand' name='deviceBrand' value={formData.deviceBrand} onChange={handleChange}>
                                             <option selected disabled>Open this select menu</option>
                                             <option value="LENOVO">LENOVO</option>
                                             <option value="ASUS">ASUS</option>
@@ -274,7 +274,7 @@ const AddRecord = () => {
                                 <div className="row text-start w-100 p-3">
                                     <div className="col-md-4 mb-3">
                                         <label htmlFor="serialId" className="form-label">Department</label>
-                                        <select class="form-select" aria-label="Default select example" name='department' id='department' value={formData.department} onChange={handleChange}>
+                                        <select className="form-select" aria-label="Default select example" name='department' id='department' value={formData.department} onChange={handleChange}>
                                             <option selected disabled>Open this select menu</option>
                                             <option value="Operations">Operations</option>
                                             <option value="Accounting">Accounting</option>
@@ -293,7 +293,7 @@ const AddRecord = () => {
                                     </div>
                                     <div className="col-md-4 mb-3">
                                         <label htmlFor="serialId" className="form-label">Designation</label>
-                                        <select class="form-select" aria-label="Default select example" name='designation' id='designation' value={formData.designation} onChange={handleChange}>
+                                        <select className="form-select" aria-label="Default select example" name='designation' id='designation' value={formData.designation} onChange={handleChange}>
                                             <option selected disabled>Open this select menu</option>
                                             <option value="Operations">Operations</option>
                                             <option value="Accounting">Accounting</option>
@@ -306,9 +306,9 @@ const AddRecord = () => {
                                     </div>
                                     <div className="col-md-4 mb-3">
                                         <label htmlFor="serialId" className="form-label">Business Unit</label>
-                                        <select class="form-select" aria-label="Default select example" name='businessUnit' id='businessUnit' value={formData.businessUnit} onChange={handleChange}>
+                                        <select className="form-select" aria-label="Default select example" name='businessUnit' id='businessUnit' value={formData.businessUnit} onChange={handleChange}>
                                             <option selected disabled>Open this select menu</option>
-                                            <option value="FAMILY SHOPPERS UNLIMITED, INC.">FAMILY SHOPPERS UNLIMITED</option>
+                                            <option value="FAMILY SHOPPERS UNLIMITED, INC. ">FAMILY SHOPPERS UNLIMITED</option>
                                             <option value="ALLHOME CORP<">ALLHOME CORP</option>
                                             <option value="THE VILLAGE SERVER INC.">THE VILLAGE SERVER INC.</option>
                                             <option value="ALLDAY MARTS INC">ALLDAY MARTS INC</option>
@@ -364,7 +364,7 @@ const AddRecord = () => {
                                     <div className="col-md-12 mb-1   ">
                                         <label htmlFor="deviceModel" className="form-label">Notes (Device condition before releasing)</label>
                                         {/* <input type="text" className="form-control h-75 d-inline-block" id="deviceModel" placeholder="Device Model" h-50 /> */}
-                                        <textarea class="form-control" id="notes" name='notes' value={formData.notes} rows="5" onChange={handleChange}></textarea>
+                                        <textarea className="form-control" id="notes" name='notes' value={formData.notes} rows="5" onChange={handleChange}></textarea>
                                     </div>
                                     
                                 </div>

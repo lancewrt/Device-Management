@@ -11,10 +11,6 @@ const AdminTopNavbar = () => {
     const [uname, setUname] = useState(null);
     const navigate = useNavigate(); // Hook to navigate programmatically
 
-    useEffect(() => {
-        
-    }, []);
-
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const today = new Date();
     const currentDay = days[today.getDay()];

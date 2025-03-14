@@ -41,7 +41,7 @@ const ViewInfo = () => {
             
             <div className="container py-4">
                 <div className="d-flex justify-content-between align-items-center mb-3">
-                    <h1 className="text-danger fw-bold">All<span className="text-success">Value</span></h1>
+                    {/* <h1 className="text-danger fw-bold">All<span className="text-success">Value</span></h1> */}
                 </div>
                 <div className="d-flex justify-content-end mb-3">
                     
