@@ -92,7 +92,7 @@ app.post('/addRecord', async (req, res) => {
 
         // 1. Insert into employee
         const [employeeResult] = await connection.execute(
-            `INSERT INTO employee (first_name, last_name, middle_name, business_unit, department_id, designation_id, location_id) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO employee (first_name, last_name, middle_name, bu_id, department_id, designation_id, location_id) VALUES (?, ?, ?, ?, ?, ?, ?)`,
             [fname, lname, mi, businessUnit, departmentId, designationId, locationId]
         );
         const employeeId = employeeResult.insertId;

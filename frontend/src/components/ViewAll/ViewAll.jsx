@@ -26,7 +26,7 @@ const ViewAll = () => {
 
     }, []);
     return (
-        <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="d-flex justify-content-center align-items-center top-0">
             {/* <AdminTopNavbar /> */}
             
             <div className="container py-4">

@@ -156,7 +156,7 @@ const AddRecord = () => {
       
 
     return (
-        <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="d-flex justify-content-center align-items-center top-0">
             <div className="container py-4">
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <Link to="/" style={{ textDecoration: 'none' }}>
@@ -308,7 +308,7 @@ const AddRecord = () => {
                                         <label htmlFor="serialId" className="form-label">Business Unit</label>
                                         <select class="form-select" aria-label="Default select example" name='businessUnit' id='businessUnit' value={formData.businessUnit} onChange={handleChange}>
                                             <option selected disabled>Open this select menu</option>
-                                            <option value="FAMILY SHOPPERS UNLIMITED">FAMILY SHOPPERS UNLIMITED</option>
+                                            <option value="FAMILY SHOPPERS UNLIMITED, INC.">FAMILY SHOPPERS UNLIMITED</option>
                                             <option value="ALLHOME CORP<">ALLHOME CORP</option>
                                             <option value="THE VILLAGE SERVER INC.">THE VILLAGE SERVER INC.</option>
                                             <option value="ALLDAY MARTS INC">ALLDAY MARTS INC</option>
