@@ -1,25 +1,25 @@
 import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import './NavBar.css';
-import { Link } from 'react-router-dom';
-
 
 const NavBar = () => {
     const [dateTime, setDateTime] = useState(new Date());
-    const [isOnline, setIsOnline] = useState(navigator.onLine);
-    const [uname, setUname] = useState(null);
-   
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const today = new Date();
-    const currentDay = days[today.getDay()];
+    const location = useLocation();
 
     useEffect(() => {
         const intervalId = setInterval(() => setDateTime(new Date()), 1000);
+        return () => clearInterval(intervalId);
     }, []);
+
+    const navItems = [
+        { paths: ["/", "/add-record"], label: "Assignment" },
+        { paths: ["/employees", "/staff"], label: "Employees" },
+        { paths: ["/laptops", "/devices"], label: "Laptops" },
+        { paths: ["/accountability", "/responsibility"], label: "Accountability" }
+    ];
 
     return (
         <div className='pb-4'>
-
-        
             <nav className="navbar">
                 <div className="navbar-brand">
                     <Link to="/" style={{ textDecoration: 'none' }}>
@@ -30,38 +30,28 @@ const NavBar = () => {
                     <div className="top-navbar-datetime text-black">
                         <span>{dateTime.toLocaleTimeString()}</span>
                         <span>|</span>
-                        <span>{currentDay}</span>
-                        <span>|</span>
                         <span>{dateTime.toLocaleDateString()}</span>
                     </div>
                 </div>
             </nav>
 
-            <nav className="">
-                <div>
-                    <ul className="nav nav-pills fw-bold">
-                        <li className="nav-item">
-                            <a className="nav-link active" aria-current="page" href="#">Assignment</a>
+            <nav>
+                <ul className="nav nav-pills fw-bold">
+                    {navItems.map((item) => (
+                        <li className="nav-item" key={item.paths[0]}>
+                            <Link 
+                                className={`nav-link ${item.paths.includes(location.pathname) ? 'active' : ''}`}
+                                to={item.paths[0]}
+                            >
+                                {item.label}
+                            </Link>
                         </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#">Laptops</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#">Employees</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#">Accountability</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                        </li>
-                    </ul>
-                </div>
+                    ))}
+                </ul>
             </nav>
 
             <hr/>
-
-        </div>        
+        </div>
     );
 };
 

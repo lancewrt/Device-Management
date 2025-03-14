@@ -5,6 +5,7 @@ import { Table, Button, Form, Card, Pagination } from "react-bootstrap";
 import { Plus, ThreeDotsVertical, ArrowRight, ArrowLeft } from "react-bootstrap-icons";
 import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
+import NavBar from '../NavBar/NavBar';
 
 const AddRecord = () => {
     const [errors, setErrors] = useState({});
@@ -158,6 +159,7 @@ const AddRecord = () => {
     return (
         <div className="d-flex justify-content-center align-items-center top-0">
             <div className="container py-4">
+            <NavBar />
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <Link to="/" style={{ textDecoration: 'none' }}>
                         {/* <h1 className="text-danger fw-bold">All<span className="text-success">Value</span></h1> */}

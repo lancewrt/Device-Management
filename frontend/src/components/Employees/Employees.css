@@ -1,0 +1,21 @@
+body {
+    background-color: #F2EDEB;
+    color: #444444;
+}
+.container {
+    background: #FFFFFF;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px #0000003b;
+}
+h2 {
+    color: #D95204;
+}
+
+.form-control {
+    border: 1px solid #4F8C32;
+}
+.form-label {
+    font-weight: bold;
+    color: #EDDF13;
+}

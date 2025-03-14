@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Route, Switch, BrowserRouter, Routes } from 'r
 import Main from './pages/main';
 import AddRecord from './components/AddRecord/AddRecord';
 import ViewInfo from './components/ViewInfo/ViewInfo';
+import Employees from './components/Employees/Employees';
+
 
 function App() {
   return (
@@ -13,6 +15,7 @@ function App() {
           <Route path='/' element={<Main />}></Route>
           <Route path='/add-record' element={<AddRecord />}></Route>
           <Route path='/view-info/:id' element={<ViewInfo />}></Route>
+          <Route path='/employees' element={<Employees />}></Route>
         </Routes>
       
       </BrowserRouter>
