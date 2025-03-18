@@ -23,7 +23,8 @@ const NavBar = () => {
             <nav className="navbar">
                 <div className="navbar-brand">
                     <Link to="/" style={{ textDecoration: 'none' }}>
-                        <h1 className="text-danger fw-bold">All<span className="text-success">Value</span></h1>
+                        {/* <h1 className="text-danger fw-bold">All<span className="text-success">Value</span></h1> */}
+                        <h1 className="text-primary fw-bold">Lance<span className="text-success">Bernal</span></h1>
                     </Link>
                 </div>
                 <div>
