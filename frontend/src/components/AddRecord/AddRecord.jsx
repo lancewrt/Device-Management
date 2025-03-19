@@ -17,11 +17,14 @@ const AddRecord = () => {
         fname: '',
         lname: '',
         mi: '',
+        phone_no: '',
+        email: '',
+        status: '',
         department: 'Open this select menu',
         designation: 'Open this select menu',
         businessUnit: 'Open this select menu',
         location: '',
-        releaseDate: '',
+        date_resigned: '',
         deviceName: '',
         lastDeviceUser: '',
         deviceModel: '',
@@ -36,12 +39,45 @@ const AddRecord = () => {
 
     useEffect(() => {
         getDepartments();
+        getDesignation();
+        getBusinessUnit();
+        getLocation();
     }, []);
 
     const getDepartments = async () => {
         try {
             const response = await axios.get('http://localhost:5000/departments');
             setDepartments(response.data);
+        } catch (error) {
+            console.error('Error:', error.response?.data || error.message);
+            alert('Failed to fetch departments.');
+        }
+    };
+
+    const getDesignation = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/designation');
+            setDesignations(response.data);
+        } catch (error) {
+            console.error('Error:', error.response?.data || error.message);
+            alert('Failed to fetch departments.');
+        }
+    };
+
+    const getBusinessUnit = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/business_unit');
+            setBusinessUnits(response.data);
+        } catch (error) {
+            console.error('Error:', error.response?.data || error.message);
+            alert('Failed to fetch departments.');
+        }
+    };
+
+    const getLocation = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/departments');
+            setLocations(response.data);
         } catch (error) {
             console.error('Error:', error.response?.data || error.message);
             alert('Failed to fetch departments.');
@@ -178,7 +214,7 @@ const AddRecord = () => {
 
     return (
         <div className="d-flex justify-content-center align-items-center top-0">
-            <div className="container py-4">
+            <div className="container py-4" style={{height: "100vh"}}>
             <NavBar />
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <Link to="/" style={{ textDecoration: 'none' }}>
@@ -195,16 +231,112 @@ const AddRecord = () => {
                 <Card> 
                     <Card.Body>
                     
-                    <nav>
-                        <div className="nav nav-tabs" id="nav-tab" role="tablist">
-                            <button className="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Device Info</button>
-                            <button className="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Employee Info</button>
-                            <button className="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Notes</button>
-                        </div>
-                    </nav>
+                        <nav>
+                            <div className="nav nav-tabs" id="nav-tab" role="tablist">
+                                <button className="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Employee Info</button>
+                                <button className="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Device Info</button>
+                                <button className="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Remarks</button>
+                            </div>
+                        </nav>
                     
-                    <div className="tab-content border-bottom border-start border-end " id="nav-tabContent">
-                        <div className="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                        <div className="tab-content border-bottom border-start border-end " id="nav-tabContent">
+                            <div className="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                                <form className="d-flex justify-content-center">
+                                    <div className="row mt-3 text-start w-100 pe-3 ps-3 pt-3">
+                                        <div className="col-md-5">
+                                            <label htmlFor="deviceModel" className="form-label">First Name</label>
+                                            <input type="text" className="form-control" id="fname" name='fname' value={formData.fname} placeholder="First Name" onChange={handleChange}/>
+                                            {errors.fname && <p style={{ color: 'red' }}>{errors.fname}</p>}
+                                        </div>
+                                        <div className="col-md-5">
+                                            <label htmlFor="serialId" className="form-label">Last Name</label>
+                                            <input type="text" className="form-control" id="lname" name='lname' value={formData.lname} placeholder="Last Name" onChange={handleChange}/>
+                                            {errors.lname && <p style={{ color: 'red' }}>{errors.lname}</p>}
+                                        </div>
+                                        <div className="col-md-2">
+                                            <label htmlFor="serialId" className="form-label">M.I.</label>
+                                            <input type="text" className="form-control" id="mi" name='mi' value={formData.mi} placeholder="Middle Initial" onChange={handleChange}/>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <form className="d-flex justify-content-center">
+                                    <div className="row mt-3 text-start w-100 pe-3 ps-3">
+                                        <div className="col-md-4">
+                                            <label htmlFor="deviceModel" className="form-label">Phone No.</label>
+                                            <input type="text" className="form-control" id="phone_no" name='phone_no' value={formData.phone_no} placeholder="Phone Number" onChange={handleChange}/>
+                                        
+                                        </div>
+                                        <div className="col-md-4">
+                                            <label htmlFor="serialId" className="form-label">E-mail</label>
+                                            <input type="text" className="form-control" id="email" name='email' value={formData.email} placeholder="Email" onChange={handleChange}/>
+                                            
+                                        </div>
+                                        <div className="col-md-4">
+                                            <label htmlFor="serialId" className="form-label">Status</label>
+                                            <input type="text" className="form-control" id="status" name='status' value={formData.status} placeholder="Status" onChange={handleChange}/>
+                                        </div>
+                                    </div>
+                                </form>
+
+
+                                <form className="d-flex justify-content-center">
+                                    <div className="row text-start w-100 p-3">
+                                        <div className="col-md-4 mb-3">
+                                            <label htmlFor="serialId" className="form-label">Department</label>
+                                            <select className="form-select text-uppercase" aria-label="Default select example" name='department' id='department' value={formData.department} onChange={handleChange}>
+                                                <option selected >Select an option</option>
+                                                {departments.map((department, index) => (
+                                                    
+                                                    <option key={index} value={department.dept_name}>{department.dept_name}</option>
+                                                ))}
+                                                
+                                            </select>
+                                            {errors.department && <p style={{ color: 'red' }}>{errors.department}</p>}
+                                        </div>
+                                        <div className="col-md-4 mb-3">
+                                            <label htmlFor="serialId" className="form-label">Designation</label>
+                                            <select className="form-select text-uppercase" aria-label="Default select example" name='designation' id='designation' value={formData.designation} onChange={handleChange}>
+                                                <option selected >Select an option</option>
+                                                {designations.map((designation, index) => (
+                                                    <option key={index} value={designation.des_name}>{designation.des_name}</option>
+                                                ))}
+                                            </select>
+                                            {errors.designation && <p style={{ color: 'red' }}>{errors.designation}</p>}
+                                        </div>
+                                        <div className="col-md-4 mb-3">
+                                            <label htmlFor="serialId" className="form-label">Business Unit</label>
+                                            <select className="form-select text-uppercase" aria-label="Default select example" name='businessUnit' id='businessUnit' value={formData.businessUnit} onChange={handleChange}>
+                                                <option selected >Select an option</option>
+                                                {businessUnits.map((businessUnit, index) => (
+                                                    <option key={index} value={businessUnit.bu_name}>{businessUnit.bu_name}</option>
+                                                ))}
+                                            </select>
+                                            {errors.businessUnit && <p style={{ color: 'red' }}>{errors.businessUnit}</p>}
+                                        </div>
+                                        
+                                        <div className="col-md-8">
+                                            <label htmlFor="deviceModel" className="form-label">Location</label>
+                                            <input type="text" className="form-control" id="location" name='location' value={formData.location} placeholder="Location" onChange={handleChange}/>
+                                            {errors.location && <p style={{ color: 'red' }}>{errors.location}</p>}
+                                        </div>
+                                        <div className="col-md-4">
+                                            <label htmlFor="deviceModel" className="form-label">Date Resigned</label>
+                                            <input type="date" className="form-control" id="date_resigned" name='date_resigned' value={formData.date_resigned} onChange={handleChange}/>
+                                        </div>
+                                    
+                                    </div>
+                                </form>
+                            <div className="d-flex justify-content-end mb-3 pe-1">
+                                
+                                <Button type='button' className="d-flex align-items-center me-4" onClick={handleNextClick}>
+                                    Next &nbsp;<ArrowRight className="me-2" />
+                                </Button>
+                            </div>
+                            
+                        </div>
+
+                        <div className="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                             <form className="d-flex justify-content-center">
                                 <div className="row mt-3 text-start w-100 ps-3 pe-3 pt-3">
                                     <div className="col-md-5 ">
@@ -213,7 +345,7 @@ const AddRecord = () => {
                                         {errors.deviceModel && <p style={{ color: 'red' }}>{errors.deviceModel}</p>}
                                     </div>
                                     <div className="col-md-4 ">
-                                        <label htmlFor="serialId" className="form-label">Serial ID</label>
+                                        <label htmlFor="serialId" className="form-label">Serial Number</label>
                                         <input type="text" className="form-control" id="serialNumber" name='serialNumber' value={formData.serialNumber} placeholder="Serial ID" onChange={handleChange}/>
                                         {errors.serialNumber && <p style={{ color: 'red' }}>{errors.serialNumber}</p>}
                                     </div>
@@ -253,7 +385,7 @@ const AddRecord = () => {
                             <form className="d-flex justify-content-center">
                                 <div className="row mb-3 text-start w-100 ps-3 pe-3">
                                     <div className="col-md-5">
-                                        <label htmlFor="deviceModel" className="form-label">Device Name</label>
+                                        <label htmlFor="deviceModel" className="form-label">Computer Name</label>
                                         <input type="text" className="form-control" id="deviceName" name='deviceName' value={formData.deviceName} placeholder="Device Name" onChange={handleChange}/>
                                         {errors.deviceName && <p style={{ color: 'red' }}>{errors.deviceName}</p>}
                                     </div>
@@ -265,110 +397,16 @@ const AddRecord = () => {
                                 </div>
                             </form>
                             <div className="d-flex justify-content-end mb-3 pe-1">
-                                
-                                <Button type='button' className="d-flex align-items-center me-4" onClick={handleNextClick}>
-                                    Next &nbsp;<ArrowRight className="me-2" />
-                                </Button>
-                            </div>
-                        </div>
-
-                        <div className="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                            <form className="d-flex justify-content-center">
-                                <div className="row mt-3 text-start w-100 pe-3 ps-3 pt-3">
-                                    <div className="col-md-5">
-                                        <label htmlFor="deviceModel" className="form-label">First Name</label>
-                                        <input type="text" className="form-control" id="fname" name='fname' value={formData.fname} placeholder="First Name" onChange={handleChange}/>
-                                        {errors.fname && <p style={{ color: 'red' }}>{errors.fname}</p>}
-                                    </div>
-                                    <div className="col-md-5">
-                                        <label htmlFor="serialId" className="form-label">Last Name</label>
-                                        <input type="text" className="form-control" id="lname" name='lname' value={formData.lname} placeholder="Last Name" onChange={handleChange}/>
-                                        {errors.lname && <p style={{ color: 'red' }}>{errors.lname}</p>}
-                                    </div>
-                                    <div className="col-md-2">
-                                        <label htmlFor="serialId" className="form-label">M.I.</label>
-                                        <input type="text" className="form-control" id="mi" name='mi' value={formData.mi} placeholder="Middle Initial" onChange={handleChange}/>
-                                    </div>
-                                </div>
-                            </form>
-
-                            <form className="d-flex justify-content-center">
-                                <div className="row text-start w-100 p-3">
-                                    <div className="col-md-4 mb-3">
-                                        <label htmlFor="serialId" className="form-label">Department</label>
-                                        <select className="form-select" aria-label="Default select example" name='department' id='department' value={formData.department} onChange={handleChange}>
-                                            {departments.map((department, index) => (
-                                                <option key={index} value={department.name}>{department.name}</option>
-                                            ))}
-                                            {/* <option selected disabled>Open this select menu</option>
-                                            <option value="Operations">Operations</option>
-                                            <option value="Accounting">Accounting</option>
-                                            <option value="Human Resources">Human Resources</option>
-                                            <option value="Merchandising">Merchandising</option>
-                                            <option value="Business System">Business System</option>
-                                            <option value="Marketing">Marketing</option>
-                                            <option value="Human Resources">Facilities Management</option>
-                                            <option value="Merchandising">Engineering</option>
-                                            <option value="Business System">Purchasing</option>
-                                            <option value="Marketing">Finance</option>
-                                            <option value="Human Resources">Security</option>
-                                            <option value="Merchandising">Training</option> */}
-                                        </select>
-                                        {errors.department && <p style={{ color: 'red' }}>{errors.department}</p>}
-                                    </div>
-                                    <div className="col-md-4 mb-3">
-                                        <label htmlFor="serialId" className="form-label">Designation</label>
-                                        <select className="form-select" aria-label="Default select example" name='designation' id='designation' value={formData.designation} onChange={handleChange}>
-                                            <option selected disabled>Open this select menu</option>
-                                            <option value="Operations">Operations</option>
-                                            <option value="Accounting">Accounting</option>
-                                            <option value="Planning and Inventory">Planning and Inventory</option>
-                                            <option value="Training">Training</option>
-                                            <option value="Finance">Finance</option>
-                                            <option value="SAP">SAP</option>
-                                        </select>
-                                        {errors.designation && <p style={{ color: 'red' }}>{errors.designation}</p>}
-                                    </div>
-                                    <div className="col-md-4 mb-3">
-                                        <label htmlFor="serialId" className="form-label">Business Unit</label>
-                                        <select className="form-select" aria-label="Default select example" name='businessUnit' id='businessUnit' value={formData.businessUnit} onChange={handleChange}>
-                                            <option selected disabled>Open this select menu</option>
-                                            <option value="FAMILY SHOPPERS UNLIMITED, INC. ">FAMILY SHOPPERS UNLIMITED</option>
-                                            <option value="ALLHOME CORP<">ALLHOME CORP</option>
-                                            <option value="THE VILLAGE SERVER INC.">THE VILLAGE SERVER INC.</option>
-                                            <option value="ALLDAY MARTS INC">ALLDAY MARTS INC</option>
-                                            <option value="ALLDAY RETAIL CONCEPT STORE">ALLDAY RETAIL CONCEPT STORE</option>
-                                            <option value="COFFEE PROJECT">COFFEE PROJECT</option>
-                                        </select>
-                                        {errors.businessUnit && <p style={{ color: 'red' }}>{errors.businessUnit}</p>}
-                                    </div>
-                                    
-                                    <div className="col-md-8">
-                                        <label htmlFor="deviceModel" className="form-label">Location</label>
-                                        <input type="text" className="form-control" id="location" name='location' value={formData.location} placeholder="Location" onChange={handleChange}/>
-                                        {errors.location && <p style={{ color: 'red' }}>{errors.location}</p>}
-                                    </div>
-                                    <div className="col-md-4">
-                                        <label htmlFor="deviceModel" className="form-label">Release Date</label>
-                                        <input type="date" className="form-control" id="releaseDate" name='releaseDate' value={formData.releaseDate} onChange={handleChange}/>
-                                    </div>
-                                
-                                </div>
-                            </form>
-
-                            <form className="d-flex justify-content-center">
-                                
-                            </form>
-                            <div className="d-flex justify-content-end mb-3 pe-1">
                                 <Button type='button' className="d-flex align-items-center me-4" onClick={handlePreviousClick}>
                                     <ArrowLeft className="me-2" />&nbsp;Prev
                                 </Button>
+                                
                                 <Button type='button' className="d-flex align-items-center me-4" onClick={handleNextClick}>
                                     Next &nbsp;<ArrowRight className="me-2" />
                                 </Button>
                             </div>
-
                         </div>
+
                         <div className="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
                             <form className="d-flex justify-content-center">
                                 <div className="row mb-3 text-start w-100 ps-3 pe-3 pt-3">

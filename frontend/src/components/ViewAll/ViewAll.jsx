@@ -30,7 +30,7 @@ const ViewAll = () => {
         <div className="d-flex justify-content-center align-items-center top-0" style={{margin: "auto"}}>
             {/* <AdminTopNavbar /> */}
             
-            <div className="container py-4">
+            <div className="container py-4" style={{height: "100vh"}}>
                 <NavBar />
                 <div className="d-flex justify-content-end mb-3">
                     <Link to="/add-record" style={{ textDecoration: 'none' }}>
