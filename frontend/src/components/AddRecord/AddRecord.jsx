@@ -76,7 +76,7 @@ const AddRecord = () => {
 
     const getLocation = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/departments');
+            const response = await axios.get('http://localhost:5000/location');
             setLocations(response.data);
         } catch (error) {
             console.error('Error:', error.response?.data || error.message);
@@ -272,9 +272,15 @@ const AddRecord = () => {
                                             <input type="text" className="form-control" id="email" name='email' value={formData.email} placeholder="Email" onChange={handleChange}/>
                                             
                                         </div>
-                                        <div className="col-md-4">
-                                            <label htmlFor="serialId" className="form-label">Status</label>
-                                            <input type="text" className="form-control" id="status" name='status' value={formData.status} placeholder="Status" onChange={handleChange}/>
+                                        <div className="col-md-4 mb-3">
+                                            <label htmlFor="serialId" className="form-label">Location</label>
+                                            <select className="form-select text-uppercase" aria-label="Default select example" name='location' id='location' value={formData.location} onChange={handleChange}>
+                                                <option selected >Select an option</option>
+                                                {locations.map((location, index) => (
+                                                    <option key={index} value={location.loc_name}>{location.loc_name}</option>
+                                                ))}
+                                            </select>
+                                            {errors.location && <p style={{ color: 'red' }}>{errors.location}</p>}
                                         </div>
                                     </div>
                                 </form>
@@ -315,11 +321,16 @@ const AddRecord = () => {
                                             {errors.businessUnit && <p style={{ color: 'red' }}>{errors.businessUnit}</p>}
                                         </div>
                                         
-                                        <div className="col-md-8">
-                                            <label htmlFor="deviceModel" className="form-label">Location</label>
-                                            <input type="text" className="form-control" id="location" name='location' value={formData.location} placeholder="Location" onChange={handleChange}/>
-                                            {errors.location && <p style={{ color: 'red' }}>{errors.location}</p>}
+                                        
+                                        <div className="col-md-4">
+                                            <label htmlFor="serialId" className="form-label">Status</label>
+                                            <input type="text" className="form-control" id="status" name='status' value={formData.status} placeholder="Status" onChange={handleChange}/>
                                         </div>
+                                        <div className="col-md-4">
+                                            <label htmlFor="emp_status" className="form-label">Employment Status</label>
+                                            <input type="text" className="form-control" id="emp_status" name='emp_status' value={formData.emp_status} placeholder="Employment Status" onChange={handleChange}/>
+                                        </div>
+                                        
                                         <div className="col-md-4">
                                             <label htmlFor="deviceModel" className="form-label">Date Resigned</label>
                                             <input type="date" className="form-control" id="date_resigned" name='date_resigned' value={formData.date_resigned} onChange={handleChange}/>
@@ -339,7 +350,12 @@ const AddRecord = () => {
                         <div className="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                             <form className="d-flex justify-content-center">
                                 <div className="row mt-3 text-start w-100 ps-3 pe-3 pt-3">
-                                    <div className="col-md-5 ">
+                                <div className="col-md-4">
+                                        <label htmlFor="deviceModel" className="form-label">Computer Name</label>
+                                        <input type="text" className="form-control" id="deviceName" name='deviceName' value={formData.deviceName} placeholder="Device Name" onChange={handleChange}/>
+                                        {errors.deviceName && <p style={{ color: 'red' }}>{errors.deviceName}</p>}
+                                    </div>
+                                    <div className="col-md-4 ">
                                         <label htmlFor="deviceModel" className="form-label">Model</label>
                                         <input type="text" className="form-control" id="deviceModel" name='deviceModel' value={formData.deviceModel} placeholder="Device Model" onChange={handleChange}/>
                                         {errors.deviceModel && <p style={{ color: 'red' }}>{errors.deviceModel}</p>}
@@ -349,7 +365,12 @@ const AddRecord = () => {
                                         <input type="text" className="form-control" id="serialNumber" name='serialNumber' value={formData.serialNumber} placeholder="Serial ID" onChange={handleChange}/>
                                         {errors.serialNumber && <p style={{ color: 'red' }}>{errors.serialNumber}</p>}
                                     </div>
-                                    <div className="col-md-3 ">
+                                    
+                                </div>
+                            </form>
+                            <form className="d-flex justify-content-center">
+                                <div className="row text-start w-100 p-3">
+                                    <div className="col-md-4 ">
                                         <label htmlFor="serialId" className="form-label">Device Type</label>
                                         <select className="form-select" aria-label="Default select example" id='deviceType' name='deviceType' value={formData.deviceType} onChange={handleChange}>
                                             <option selected disabled>Open this select menu</option>
@@ -358,11 +379,7 @@ const AddRecord = () => {
                                         </select>
                                         {errors.deviceType && <p style={{ color: 'red' }}>{errors.deviceType }</p>}
                                     </div>
-                                </div>
-                            </form>
-                            <form className="d-flex justify-content-center">
-                                <div className="row text-start w-100 p-3">
-                                    <div className="col-md-5">
+                                    <div className="col-md-4">
                                         <label htmlFor="serialId" className="form-label">Device Brand</label>
                                         <select className="form-select" aria-label="Default select example" id='deviceBrand' name='deviceBrand' value={formData.deviceBrand} onChange={handleChange}>
                                             <option selected disabled>Open this select menu</option>
@@ -375,21 +392,33 @@ const AddRecord = () => {
                                         </select>
                                         {errors.deviceBrand && <p style={{ color: 'red' }}>{errors.deviceBrand}</p>}
                                     </div>
-                                    <div className="col-md-7 ">
-                                        <label htmlFor="deviceModel" className="form-label">Specification</label>
-                                        <input type="text" className="form-control" id="specification" name='specification' value={formData.specification} placeholder="Device Specification" onChange={handleChange}/>
-                                        {errors.specification && <p style={{ color: 'red' }}>{errors.specification}</p>}
+                                    <div className="col-md-4">
+                                        <label htmlFor="condition" className="form-label">Condition</label>
+                                        <input type="text" className="form-control" id="condition" name='condition' value={formData.condition} placeholder="Device Name" onChange={handleChange}/>
+                                        {errors.condition && <p style={{ color: 'red' }}>{errors.condition}</p>}
                                     </div>
                                 </div>
                             </form>
                             <form className="d-flex justify-content-center">
+                                   
                                 <div className="row mb-3 text-start w-100 ps-3 pe-3">
-                                    <div className="col-md-5">
-                                        <label htmlFor="deviceModel" className="form-label">Computer Name</label>
-                                        <input type="text" className="form-control" id="deviceName" name='deviceName' value={formData.deviceName} placeholder="Device Name" onChange={handleChange}/>
+                                    <div className="col-md-6 ">
+                                        <label htmlFor="deviceModel" className="form-label">Specification</label>
+                                        <textarea type="text" className="form-control" id="specification" name='specification' value={formData.specification} placeholder="Device Specification" onChange={handleChange} rows='3'/>
+                                        {errors.specification && <p style={{ color: 'red' }}>{errors.specification}</p>}
+                                    </div>
+                                    <div className="col-md-6">
+                                        <label htmlFor="deviceModel" className="form-label">Remarks</label>
+                                        <textarea type="text" className="form-control" id="deviceName" name='deviceName' value={formData.deviceName} placeholder="Device Name" onChange={handleChange} rows='3'/>
                                         {errors.deviceName && <p style={{ color: 'red' }}>{errors.deviceName}</p>}
                                     </div>
-                                    <div className="col-md-7">
+                               
+                                    
+                                </div>
+                            </form>
+                            <form className="d-flex justify-content-center">
+                                <div className="row mb-3 text-start w-100 ps-3 pe-3"> 
+                                    <div className="col-md-12">
                                         <label htmlFor="serialId" className="form-label">Last Device User</label>
                                         <input type="text" className="form-control" id="lastDeviceUser" name='lastDeviceUser' value={formData.lastDeviceUser} placeholder="Last Device User" onChange={handleChange}/>
                                     </div>
