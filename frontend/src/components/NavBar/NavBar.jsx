@@ -14,7 +14,7 @@ const NavBar = () => {
     const navItems = [
         { paths: ["/", "/add-record"], label: "Assignment" },
         { paths: ["/employees", "/staff"], label: "Employees" },
-        { paths: ["/laptops", "/devices"], label: "Laptops" },
+        { paths: ["/devices", "/add-device"], label: "Devices" },
         { paths: ["/accountability", "/responsibility"], label: "Accountability" }
     ];
 

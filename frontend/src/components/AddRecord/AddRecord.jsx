@@ -131,85 +131,85 @@ const AddRecord = () => {
         }
     };
 
-    const validateForm = () => {
-        let tempErrors = {};
-        let isValid = true;
-      
-        // Required Fields Validation
-        if (!formData.fname.trim()) {
-            tempErrors.fname = 'First name is required';
-            isValid = false;
-        }
-      
-        if (!formData.lname.trim()) {
-            tempErrors.lname = 'Last name is required';
-            isValid = false;
-        }
-      
-        if (formData.department === 'Open this select menu') {
-            tempErrors.department = 'Please select a department';
-            isValid = false;
-        }
+        const validateForm = () => {
+            let tempErrors = {};
+            let isValid = true;
+        
+            // Required Fields Validation
+            if (!formData.fname.trim()) {
+                tempErrors.fname = 'First name is required';
+                isValid = false;
+            }
+        
+            if (!formData.lname.trim()) {
+                tempErrors.lname = 'Last name is required';
+                isValid = false;
+            }
+        
+            if (formData.department === 'Open this select menu') {
+                tempErrors.department = 'Please select a department';
+                isValid = false;
+            }
 
-        if (formData.businessUnit === 'Open this select menu') {
-            tempErrors.businessUnit = 'Please select a business unit';
-            isValid = false;
-        }
+            if (formData.businessUnit === 'Open this select menu') {
+                tempErrors.businessUnit = 'Please select a business unit';
+                isValid = false;
+            }
 
-        if (formData.designation === 'Open this select menu') {
-            tempErrors.designation = 'Please select a designation';
-            isValid = false;
-        }
+            if (formData.designation === 'Open this select menu') {
+                tempErrors.designation = 'Please select a designation';
+                isValid = false;
+            }
 
-        if (formData.designation === 'Open this select menu') {
-            tempErrors.deviceType = 'Please select a device type';
-            isValid = false;
-        }
+            if (formData.designation === 'Open this select menu') {
+                tempErrors.deviceType = 'Please select a device type';
+                isValid = false;
+            }
 
-        if (formData.deviceBrand === 'Open this select menu') {
-            tempErrors.deviceBrand = 'Please select a device brand';
+            if (formData.deviceBrand === 'Open this select menu') {
+                tempErrors.deviceBrand = 'Please select a device brand';
+                isValid = false;
+            }
+        
+            if (formData.deviceName.trim().length < 3) {
+            tempErrors.deviceName = 'Device name must be at least 3 characters';
             isValid = false;
-        }
-      
-        if (formData.deviceName.trim().length < 3) {
-          tempErrors.deviceName = 'Device name must be at least 3 characters';
-          isValid = false;
-        }
+            }
 
-        if (!formData.location.trim()) {
-            tempErrors.location = 'Location is required';
-            isValid = false;
-        }
+            if (!formData.location.trim()) {
+                tempErrors.location = 'Location is required';
+                isValid = false;
+            }
 
-        if (!formData.deviceModel.trim()) {
-            tempErrors.deviceModel = 'Device modelis required';
-            isValid = false;
-        }
+            if (!formData.deviceModel.trim()) {
+                tempErrors.deviceModel = 'Device modelis required';
+                isValid = false;
+            }
 
-        if (!formData.serialNumber.trim()) {
-            tempErrors.serialNumber = 'Serial ID is required';
-            isValid = false;
-        }
+            if (!formData.serialNumber.trim()) {
+                tempErrors.serialNumber = 'Serial ID is required';
+                isValid = false;
+            }
 
-        if (!formData.specification.trim()) {
-            tempErrors.specification = 'Specification is required';
-            isValid = false;
-        }
+            if (!formData.specification.trim()) {
+                tempErrors.specification = 'Specification is required';
+                isValid = false;
+            }
 
-        if (!formData.dusername.trim()) {
-            tempErrors.dusername = 'Username is required';
+            if (!formData.dusername.trim()) {
+                tempErrors.dusername = 'Username is required';
+                isValid = false;
+            }
+        
+            // Password Strength Validation
+            if (formData.dpassword.length < 6) {
+            tempErrors.dpassword = 'Password must be at least 6 characters';
             isValid = false;
-        }
-      
-        // Password Strength Validation
-        if (formData.dpassword.length < 6) {
-          tempErrors.dpassword = 'Password must be at least 6 characters';
-          isValid = false;
-        }
-      
-        setErrors(tempErrors);
-        return isValid;
-    };
+            }
+        
+            setErrors(tempErrors);
+            return isValid;
+        };
       
 
     return (
@@ -352,7 +352,7 @@ const AddRecord = () => {
                                 <div className="row mt-3 text-start w-100 ps-3 pe-3 pt-3">
                                 <div className="col-md-4">
                                         <label htmlFor="deviceModel" className="form-label">Computer Name</label>
-                                        <input type="text" className="form-control" id="deviceName" name='deviceName' value={formData.deviceName} placeholder="Device Name" onChange={handleChange}/>
+                                        <input type="text" className="form-control" id="deviceName" name='deviceName' value={formData.deviceName} placeholder="Computer Name" onChange={handleChange}/>
                                         {errors.deviceName && <p style={{ color: 'red' }}>{errors.deviceName}</p>}
                                     </div>
                                     <div className="col-md-4 ">
@@ -409,7 +409,7 @@ const AddRecord = () => {
                                     </div>
                                     <div className="col-md-6">
                                         <label htmlFor="deviceModel" className="form-label">Remarks</label>
-                                        <textarea type="text" className="form-control" id="deviceName" name='deviceName' value={formData.deviceName} placeholder="Device Name" onChange={handleChange} rows='3'/>
+                                        <textarea type="text" className="form-control" id="deviceName" name='deviceName' value={formData.deviceName} placeholder="Remarks" onChange={handleChange} rows='3'/>
                                         {errors.deviceName && <p style={{ color: 'red' }}>{errors.deviceName}</p>}
                                     </div>
                                
@@ -441,12 +441,12 @@ const AddRecord = () => {
                                 <div className="row mb-3 text-start w-100 ps-3 pe-3 pt-3">
                                     <div className="col-md-6">
                                         <label htmlFor="deviceModel" className="form-label">Device Username</label>
-                                        <input type="text" className="form-control" id="dusername" name='dusername' value={formData.dusername} placeholder="Device Name" onChange={handleChange}/>
+                                        <input type="text" className="form-control" id="dusername" name='dusername' value={formData.dusername} placeholder="Device Username" onChange={handleChange}/>
                                         {errors.dusername && <p style={{ color: 'red' }}>{errors.dusername}</p>}
                                     </div>
                                     <div className="col-md-6">
                                         <label htmlFor="serialId" className="form-label">Device Password</label>
-                                        <input type="text" className="form-control" id="dpassword" name='dpassword' value={formData.dpassword} placeholder="Last Device User" onChange={handleChange}/>
+                                        <input type="text" className="form-control" id="dpassword" name='dpassword' value={formData.dpassword} placeholder="Device Password" onChange={handleChange}/>
                                         {errors.dpassword && <p style={{ color: 'red' }}>{errors.dpassword}</p>}
                                     </div>
                                 </div>

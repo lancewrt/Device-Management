@@ -5,6 +5,8 @@ import Main from './pages/main';
 import AddRecord from './components/AddRecord/AddRecord';
 import ViewInfo from './components/ViewInfo/ViewInfo';
 import Employees from './components/Employees/Employees';
+import AddDevice from './components/AddDevice/AddDevice';
+import DeviceList from './components/DeviceList/DeviceList';
 
 
 function App() {
@@ -16,6 +18,8 @@ function App() {
           <Route path='/add-record' element={<AddRecord />}></Route>
           <Route path='/view-info/:id' element={<ViewInfo />}></Route>
           <Route path='/employees' element={<Employees />}></Route>
+          <Route path='/devices' element={<DeviceList />}></Route>
+          <Route path='/add-device' element={<AddDevice />}></Route>
         </Routes>
       
       </BrowserRouter>

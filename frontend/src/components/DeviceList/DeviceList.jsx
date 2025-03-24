@@ -1,24 +1,14 @@
-import React, { useState, useEffect } from "react";
-import './ViewAll.css';
-import "bootstrap/dist/css/bootstrap.min.css";
-import { Table, Button, Form, Card, Pagination } from "react-bootstrap";
-import { Plus, ThreeDotsVertical } from "react-bootstrap-icons";
-import axios from "axios";
-import { Link } from "react-router-dom";
-import NavBar from "../NavBar/NavBar";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Button, Card, Table, Form, Pagination } from 'react-bootstrap';
+import { Plus, ThreeDotsVertical } from 'react-bootstrap-icons';
+import NavBar from '../NavBar/NavBar';
+import { useState } from 'react';
 
-  
-
-const ViewAll = () => {
+const DeviceList = () => {
     const [search, setSearch] = useState("");
-    const [data, setData] = useState([]);
+    const [data, setData] = useState([]);   
 
-    useEffect(() => {
-        axios.get('http://localhost:5000/api/employees')
-            .then(response => setData(response.data))
-            .catch(error => console.error('Error fetching data:', error));
-
-    }, []);
     return (
         <div className="d-flex justify-content-center align-items-center top-0" style={{margin: "auto"}}>
             {/* <AdminTopNavbar /> */}
@@ -26,15 +16,12 @@ const ViewAll = () => {
             <div className="container py-4" style={{height: "100vh"}}>
                 <NavBar />
                 <div className="d-flex justify-content-end mb-3">
-                    <Link to="/add-record" style={{ textDecoration: 'none' }}>
+                    <Link to="/add-device" style={{ textDecoration: 'none' }}>
                         <Button variant="outline-danger" className="d-flex align-items-center me-4">
-                            <Plus className="me-2" /> Releasing
+                            <Plus className="me-2" /> Add Device
                         </Button>
                     </Link>
                     
-                    <Button variant="outline-success" className="d-flex align-items-center">
-                        <Plus className="me-2" /> Turn Over
-                    </Button>
                 </div>
                 <div className="d-flex justify-content-start mb-3">
                     <Form.Control type="text" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} className="me-2 w-50" />
@@ -45,12 +32,11 @@ const ViewAll = () => {
                     <Table striped bordered hover>
                         <thead>
                         <tr className="row text-center">    
-                            <th className="col-3">Name</th>
-                            <th className="col-2">Department</th>
-                            <th className="col-2">Business Unit</th>
-                            <th className="col-2">Device Name</th>
-                            <th className="col">Device Model</th>
-                            <th className="col">Device SN</th>
+                            <th className="col-3">Computer Name</th>
+                            <th className="col-2">Serial No.</th>
+                            <th className="col-2">Model</th>
+                            <th className="col-2">Type</th>
+                            <th className="col">Last User</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -92,4 +78,4 @@ const ViewAll = () => {
     );
 };
 
-export default ViewAll;
+export default DeviceList;
