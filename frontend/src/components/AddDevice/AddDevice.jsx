@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button, Card } from 'react-bootstrap';
 import { ArrowLeft, ArrowRight } from 'react-bootstrap-icons';
 import NavBar from '../NavBar/NavBar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+
 
 const AddDevice = () => {
+    const navigate = useNavigate();
     const [deviceName, setDeviceName] = useState('');
     const [errors, setErrors] = useState({});
     const [deviceType, setDeviceType] = useState('');
@@ -18,7 +22,8 @@ const AddDevice = () => {
         condition: '',
         specification: '',
         remarks: '',
-        lastDeviceUser: ''
+        lastDeviceUser: '',
+        status: ''
     });
 
     const handleChange = (e) => {
@@ -119,19 +124,17 @@ const AddDevice = () => {
     return (
         <div className="d-flex justify-content-center align-items-center top-0">
             <div className="container py-4" style={{height: "100vh"}}>
-            <NavBar />
-                <div className="d-flex justify-content-between align-items-center mb-3">
-                    <Link to="/" style={{ textDecoration: 'none' }}>
-                        {/* <h1 className="text-danger fw-bold">All<span className="text-success">Value</span></h1> */}
-                    </Link>
-                    {/* <Button variant="outline-warning" className="d-flex align-items-center">
-                    <Plus className="me-2" /> Add New
-                    </Button> */}
+                <NavBar />
+                <div className="d-flex justify-content-start mb-3">
+                    <Button variant="outline-primary" className="d-flex align-items-center border-0 fw-bold" onClick={() => navigate(-1)}>
+                        <FontAwesomeIcon icon={faArrowLeft} size='xl' className='d-flex justify-content-left border-0 pe-2'/> Back
+                    </Button>
+                    
                 </div>
                 <div className="d-flex mb-3">
                     
                 </div>
-                <h3 className='text-start fw-bold'>Add Record</h3>
+                <h3 className='text-start fw-bold'>Add Device</h3>
                 <Card> 
                     <Card.Body>
                     <nav>
@@ -168,7 +171,7 @@ const AddDevice = () => {
                                     <div className="col-md-4 ">
                                         <label htmlFor="serialId" className="form-label">Device Type</label>
                                         <select className="form-select" aria-label="Default select example" id='deviceType' name='deviceType' value={formData.deviceType} onChange={handleChange}>
-                                            <option selected disabled>Open this select menu</option>
+                                            <option selected >Open this select menu</option>
                                             <option value="LAPTOP">LAPTOP</option>
                                             <option value="DESKTOP">DESKTOP</option>
                                         </select>
@@ -177,12 +180,14 @@ const AddDevice = () => {
                                     <div className="col-md-4">
                                         <label htmlFor="serialId" className="form-label">Device Brand</label>
                                         <select className="form-select" aria-label="Default select example" id='deviceBrand' name='deviceBrand' value={formData.deviceBrand} onChange={handleChange}>
-                                            <option selected disabled>Open this select menu</option>
-                                            <option value="LENOVO">LENOVO</option>
-                                            <option value="ASUS">ASUS</option>
-                                            <option value="HP">HP</option>
-                                            <option value="DELL">DELL</option>
+                                            <option selected >Open this select menu</option>
                                             <option value="ACER">ACER</option>
+                                            <option value="APPLE">APPLE</option>
+                                            <option value="ASUS">ASUS</option>
+                                            <option value="DELL">DELL</option>
+                                            <option value="HP">HP</option>
+                                            <option value="HUAWEI">HUAWEI</option>
+                                            <option value="LENOVO">LENOVO</option>
                                             <option value="MSI">MSI</option>
                                         </select>
                                         {errors.deviceBrand && <p style={{ color: 'red' }}>{errors.deviceBrand}</p>}
@@ -213,25 +218,27 @@ const AddDevice = () => {
                             </form>
                             <form className="d-flex justify-content-center">
                                 <div className="row mb-3 text-start w-100 ps-3 pe-3"> 
-                                    <div className="col-md-12">
+                                    <div className="col-md-8">
                                         <label htmlFor="serialId" className="form-label">Last Device User</label>
                                         <input type="text" className="form-control" id="lastDeviceUser" name='lastDeviceUser' value={formData.lastDeviceUser} placeholder="Last Device User" onChange={handleChange}/>
+                                    </div>
+                                    <div className="col-md-4">
+                                        <label htmlFor="serialId" className="form-label">Status</label>
+                                        <input type="text" className="form-control" id="status" name='status' value={formData.status} placeholder="Status" onChange={handleChange}/>
                                     </div>
                                     
                                 </div>
                             </form>
                             <div className="d-flex justify-content-end mb-3 pe-1">
+                                <Button type='button' className="d-flex align-items-center me-4" >
+                                    Add &nbsp;<ArrowRight className="me-2" />
+                                </Button>
                                 
                             </div>
                         </div>
-
-                        
-
-                        
+  
                     </div>
 
-                    
-                    
                     </Card.Body>
                 </Card>
             
