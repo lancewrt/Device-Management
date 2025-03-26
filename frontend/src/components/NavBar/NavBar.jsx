@@ -37,9 +37,9 @@ const NavBar = () => {
             </nav>
 
             <nav>
-                <ul className="nav nav-pills fw-bold">
+                <ul className="nav nav-pills " >
                     {navItems.map((item) => (
-                        <li className="nav-item" key={item.paths[0]}>
+                        <li className="nav-item" key={item.paths[0]} style={{color: 'black'}}>
                             <Link 
                                 className={`nav-link ${item.paths.includes(location.pathname) ? 'active' : ''}`}
                                 to={item.paths[0]}

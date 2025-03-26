@@ -125,7 +125,7 @@ app.get('/location', (req, res) => {
     });
 });
 
-app.get('/device', (req, res) => {
+/* app.get('/device', (req, res) => {
     db.query('SELECT * FROM device', (err, results) => {
         if (err) {
             res.status(500).send  
@@ -138,10 +138,86 @@ app.get('/device', (req, res) => {
         res.status(200).json(results);
     });
 });
+ */
+
+app.get('/device', (req, res) => {
+    const { page = 1, limit = 10 } = req.query; // Default to page 1, 10 devices per page
+    const offset = (page - 1) * limit;
+
+    db.query('SELECT * FROM device LIMIT ? OFFSET ?', [parseInt(limit), parseInt(offset)], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        db.query('SELECT COUNT(*) AS total FROM device', (err, countResults) => {
+            if (err) {
+                return res.status(500).json({ error: 'Database error' });
+            }
+
+            const total = countResults[0].total;
+            res.status(200).json({ data: results, total, page: parseInt(page), limit: parseInt(limit) });
+        });
+    });
+});
+
+/* app.get('/device/:id', (req, res) => {
+    const id = req.params.id;
+    db.query('SELECT * FROM device WHERE device_id = ?', [id], (err, results) => {
+        if (err) {
+            res.status(500).send  
+        }
+  
+        if (results.length === 0) {
+          return res.status(404).json({ message: 'Device not found' });
+        }
+    
+        res.status(200).json(results);
+    });
+}); */
 
 app.get('/device/:id', (req, res) => {
     const id = req.params.id;
-    db.query('SELECT * FROM device WHERE device_id = ?', [id], (err, results) => {
+    db.query(`SELECT 
+                a.ass_id,
+                a.release_date,
+                a.return_date,
+                a.remarks,
+                a.acc_username,
+                a.acc_password,
+                
+                e.emp_id,
+                e.fname,
+                e.lname,
+                e.mname,
+                e.phone_no,
+                e.email,
+                e.emp_status,
+
+                d.device_id,
+                d.computer_name,
+                d.serial_number,
+                d.model,
+                d.device_type,
+                d.brand,
+                d.specs,
+                d.status,
+                d.remarks,
+                d.last_device_user,
+
+                dep.dept_name,
+                des.des_name,
+                loc.loc_name,
+                bu.bu_name
+
+            FROM assignment a
+            JOIN employee e ON a.emp_id = e.emp_id
+            JOIN device d ON a.device_id = d.device_id
+            JOIN department dep ON e.dept_id = dep.dept_id
+            JOIN designation des ON e.des_id = des.des_id
+            JOIN location loc ON e.loc_id = loc.loc_id
+            JOIN business_unit bu ON e.bu_id = bu.bu_id
+            WHERE d.device_id = ?;
+            `, [id], (err, results) => {
         if (err) {
             res.status(500).send  
         }
