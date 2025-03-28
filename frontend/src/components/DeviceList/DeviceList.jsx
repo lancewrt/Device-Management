@@ -73,7 +73,7 @@ const DeviceList = () => {
                 
                 <div className="d-flex justify-content-end mb-3">
                     <Link to="/add-device" style={{ textDecoration: 'none' }}>
-                        <Button variant="outline-danger" className="d-flex align-items-center me-4">
+                        <Button variant="outline-success" className="d-flex align-items-center me-4">
                             <Plus className="me-2" /> Add Device
                         </Button>
                     </Link>

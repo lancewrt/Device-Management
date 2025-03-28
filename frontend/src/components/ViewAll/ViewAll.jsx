@@ -86,14 +86,12 @@ const ViewAll = () => {
                 <NavBar />
                 <div className="d-flex justify-content-end mb-3">
                     <Link to="/add-record" style={{ textDecoration: 'none' }}>
-                        <Button variant="outline-danger" className="d-flex align-items-center me-4">
+                        <Button variant="outline-success" className="d-flex align-items-center me-4">
                             <Plus className="me-2" /> Releasing
                         </Button>
                     </Link>
                     
-                    <Button variant="outline-success" className="d-flex align-items-center">
-                        <Plus className="me-2" /> Turn Over
-                    </Button>
+                    
                 </div>
                 <div className="d-flex justify-content-start mb-3 ms-2">
                     <Form.Control 

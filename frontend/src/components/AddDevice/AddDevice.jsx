@@ -180,7 +180,7 @@ const AddDevice = () => {
                             </form>
                             <form className="d-flex justify-content-center mb-3">
                                 <div className="row mb-3 text-start w-100 ps-3 pe-3"> 
-                                    <div className="col-md-8">
+                                    <div className="col-md-12">
                                         <label htmlFor="last_device_user" className="form-label">Last Device User</label>
                                         <input type="text" className="form-control" id="last_device_user" name='last_device_user' value={formData.last_device_user} placeholder="Last Device User" onChange={handleChange}/>
                                     </div>

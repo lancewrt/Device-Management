@@ -396,72 +396,72 @@ app.post('/add-entry', (req, res) => {
                 return db.rollback(() => res.status(500).json({ error: 'Error checking device', details: err }));
             }
 
-            if (deviceResults.length > 0) {
-                // Device exists -> Update status only
-                const existingDeviceId = deviceResults[0].device_id;
+            let device_id;
 
-                const updateDeviceStatus = `UPDATE device SET status = ? WHERE device_id = ?`;
-                db.query(updateDeviceStatus, [status, existingDeviceId], (err) => {
+            if (deviceResults.length > 0) {
+                // Device exists -> Update status
+                device_id = deviceResults[0].device_id;
+
+                const updateDeviceStatus = `UPDATE device SET status = ?, last_device_user = ? WHERE device_id = ?`;
+                db.query(updateDeviceStatus, ['Released', last_device_user, device_id], (err) => {
                     if (err) {
                         return db.rollback(() => res.status(500).json({ error: 'Failed to update device status', details: err }));
+                    }
+
+                    // Continue with employee and assignment insertion
+                    insertEmployeeAndAssignment(device_id);
+                });
+
+            } else {
+                // Device does NOT exist -> Insert new device
+                const insertDevice = `
+                    INSERT INTO device (computer_name, model, serial_number, device_type, brand, specs, status, remarks, last_device_user)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+                db.query(insertDevice, [computer_name, model, serial_number, device_type, brand, specs, status, remarks, last_device_user], (err, deviceResult) => {
+                    if (err) {
+                        return db.rollback(() => res.status(500).json({ error: 'Failed to insert device', details: err }));
+                    }
+
+                    device_id = deviceResult.insertId;
+
+                    // Continue with employee and assignment insertion
+                    insertEmployeeAndAssignment(device_id);
+                });
+            }
+        });
+
+        // Function to insert employee and assignment
+        function insertEmployeeAndAssignment(device_id) {
+            const insertEmployee = `
+                INSERT INTO employee (fname, lname, mname, phone_no, email, emp_status, dept_id, des_id, bu_id, loc_id) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+
+            db.query(insertEmployee, [fname, lname, mi, phone_no, email, emp_status, department, designation, business_unit, location], (err, employeeResult) => {
+                if (err) {
+                    return db.rollback(() => res.status(500).json({ error: 'Failed to insert employee', details: err }));
+                }
+                const emp_id = employeeResult.insertId;
+
+                // Insert into assignment table
+                const insertAssignment = `
+                    INSERT INTO assignment (release_date, return_date, requestor, acc_username, acc_password, emp_id, device_id)
+                    VALUES (NOW(), NULL, ?, ?, ?, ?, ?)`;
+
+                db.query(insertAssignment, [requestor, acc_username, acc_password, emp_id, device_id], (err) => {
+                    if (err) {
+                        return db.rollback(() => res.status(500).json({ error: 'Failed to insert assignment', details: err }));
                     }
 
                     db.commit(err => {
                         if (err) {
                             return db.rollback(() => res.status(500).json({ error: 'Commit failed', details: err }));
                         }
-                        return res.status(200).json({ message: 'Device status updated successfully', device_id: existingDeviceId });
+                        return res.status(200).json({ message: 'Entry added successfully', emp_id, device_id });
                     });
                 });
-
-            } else {
-                // Device does NOT exist -> Insert new employee, device, and assignment
-                const insertEmployee = `
-                    INSERT INTO employee (fname, lname, mname, phone_no, email, emp_status, dept_id, des_id, bu_id, loc_id) 
-                    VALUES (?, ?, ?, ?, ?, ?, 
-                        (SELECT dept_id FROM department WHERE dept_name = ?),
-                        (SELECT des_id FROM designation WHERE des_name = ?),
-                        (SELECT bu_id FROM business_unit WHERE bu_name = ?),
-                        (SELECT loc_id FROM location WHERE loc_name = ?))`;
-
-                db.query(insertEmployee, [fname, lname, mi, phone_no, email, emp_status, department, designation, business_unit, location], (err, employeeResult) => {
-                    if (err) {
-                        return db.rollback(() => res.status(500).json({ error: 'Failed to insert employee', details: err }));
-                    }
-                    const emp_id = employeeResult.insertId;
-
-                    // Insert new device
-                    const insertDevice = `
-                        INSERT INTO device (computer_name, model, serial_number, device_type, brand, specs, status, remarks, last_device_user)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-
-                    db.query(insertDevice, [computer_name, model, serial_number, device_type, brand, specs, status, remarks, last_device_user], (err, deviceResult) => {
-                        if (err) {
-                            return db.rollback(() => res.status(500).json({ error: 'Failed to insert device', details: err }));
-                        }
-                        const device_id = deviceResult.insertId;
-
-                        // Insert into assignment table
-                        const insertAssignment = `
-                            INSERT INTO assignment (release_date, return_date, requestor, acc_username, acc_password, emp_id, device_id)
-                            VALUES (NOW(), NULL, ?, ?, ?, ?, ?)`;
-
-                        db.query(insertAssignment, [requestor, acc_username, acc_password, emp_id, device_id], (err) => {
-                            if (err) {
-                                return db.rollback(() => res.status(500).json({ error: 'Failed to insert assignment', details: err }));
-                            }
-
-                            db.commit(err => {
-                                if (err) {
-                                    return db.rollback(() => res.status(500).json({ error: 'Commit failed', details: err }));
-                                }
-                                return res.status(200).json({ message: 'Entry added successfully', emp_id, device_id });
-                            });
-                        });
-                    });
-                });
-            }
-        });
+            });
+        }
     });
 });
 

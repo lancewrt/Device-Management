@@ -4,7 +4,7 @@ import NavBar from '../NavBar/NavBar';
 import { Card, Button, Form, Pagination, Table } from 'react-bootstrap';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faArrowsSpin } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faArrowsSpin, faFileExport } from '@fortawesome/free-solid-svg-icons';
 import { Hr, X } from 'react-bootstrap-icons';
 import StatusLabel from '../StatusLabel/StatusLabel';
 import axios from 'axios';
@@ -153,13 +153,58 @@ const DeviceInfo = () => {
                             <td className="text-start ps-5 w-70 fs-5 fw-light pe-5 align-top" style={{ width: "70%" }}>{device.loc_name || "#N/A"}</td>
                         </tr>
                     </Table>
-                    <div className="d-flex justify-content-end mb-3 pe-5">
-                        <Button variant="button-primary" className="btn btn-primary d-flex align-items-center fw-bold" onClick={generatePdf}>
-                        <FontAwesomeIcon icon={faArrowsSpin} size='xl' className='d-flex justify-content-left border-0 pe-2 '/> Generate Accountability
-                        </Button>
-                        
+                    <div>
+                        <div className="d-flex justify-content-end mb-2 pe-5">
+                            <Button variant="button-primary" className="btn btn-primary d-flex align-items-center fw-bold" onClick={generatePdf} disabled={device.status !== 'Released'}>
+                            <FontAwesomeIcon icon={faArrowsSpin} size='lg' className='d-flex justify-content-left border-0 pe-2 '/> Generate Accountability
+                            </Button>
+                        </div>
+                        <div className="d-flex justify-content-end mb-3 pe-5">
+                            <Button variant="button-primary" className="btn btn-danger d-flex align-items-center fw-bold" disabled={device.status !== 'Released'} data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <FontAwesomeIcon icon={faFileExport} size='lg' className='d-flex justify-content-left border-0 pe-2 ' />Turn Over
+                            </Button>
+                        </div>
+
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-lg">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Turn Over</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div>
+                                            <form className="d-flex justify-content-center">
+                                                <div className="row  text-start w-100 ps-3 pe-3 pt-3">
+                                                    <div className="col-md-12">
+                                                        <label htmlFor="acc_username" className="form-label">Remarks</label>
+                                                        <textarea rows='3' type="text" className="form-control" id="acc_username" name='acc_username'  placeholder={device.remarks} value={device.remarks}/>
+                                                    </div>
+                                                    <div className="col-md-4 mt-3">
+                                                        <label htmlFor="status" className="form-label">Status</label>
+                                                        <select className="form-select text-uppercase" aria-label="Default select example" id='status' name='status' >
+                                                            <option selected disabled>Select an option</option>
+                                                            <option value="Defective">Pending</option>
+                                                            <option value="Available">Available</option>
+                                                            <option value="Defective">Defective</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Turn Over</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    
                     </div>
-                </div>
           
                 </Card.Body>
                 

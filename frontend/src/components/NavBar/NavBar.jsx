@@ -13,7 +13,9 @@ const NavBar = () => {
 
     const navItems = [
         { paths: ["/", "/add-record"], label: "Assignment" },
+        
         { paths: ["/devices", "/add-device", "/device-info"], label: "Devices", dynamic: "/device-info/" },
+        { paths: ["/turn-over"], label: "Turn Over" },
     ];
 
     return (
