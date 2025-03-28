@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Card } from 'react-bootstrap';
-import { ArrowLeft, ArrowRight } from 'react-bootstrap-icons';
+import { ArrowLeft, ArrowRight, Plus } from 'react-bootstrap-icons';
 import NavBar from '../NavBar/NavBar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
@@ -10,20 +10,19 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 const AddDevice = () => {
     const navigate = useNavigate();
-    const [deviceName, setDeviceName] = useState('');
+ 
     const [errors, setErrors] = useState({});
-    const [deviceType, setDeviceType] = useState('');
+   
     const [formData, setFormData] = useState({
-        deviceName: '',
-        deviceModel: '',
-        serialNumber: '',
-        deviceType: '',
-        deviceBrand: '',
-        condition: '',
-        specification: '',
+        computer_name: '',
+        model: '',
+        serial_number: '',
+        device_type: '',
+        brand: '',
+        specs: '',
         remarks: '',
-        lastDeviceUser: '',
-        status: ''
+        last_device_user: '',
+        status: 'Select an option',
     });
 
     const handleChange = (e) => {
@@ -38,92 +37,52 @@ const AddDevice = () => {
         let tempErrors = {};
         let isValid = true;
       
-        // Required Fields Validation
-        if (!formData.fname.trim()) {
-            tempErrors.fname = 'First name is required';
+        if (formData.brand === 'Open this select menu') {
+            tempErrors.brand = 'Please select a device brand';
             isValid = false;
         }
       
-        if (!formData.lname.trim()) {
-            tempErrors.lname = 'Last name is required';
-            isValid = false;
-        }
-      
-        if (formData.department === 'Open this select menu') {
-            tempErrors.department = 'Please select a department';
-            isValid = false;
-        }
-
-        if (formData.businessUnit === 'Open this select menu') {
-            tempErrors.businessUnit = 'Please select a business unit';
-            isValid = false;
-        }
-
-        if (formData.designation === 'Open this select menu') {
-            tempErrors.designation = 'Please select a designation';
-            isValid = false;
-        }
-
-        if (formData.designation === 'Open this select menu') {
-            tempErrors.deviceType = 'Please select a device type';
-            isValid = false;
-        }
-
-        if (formData.deviceBrand === 'Open this select menu') {
-            tempErrors.deviceBrand = 'Please select a device brand';
-            isValid = false;
-        }
-      
-        if (formData.deviceName.trim().length < 3) {
-          tempErrors.deviceName = 'Device name must be at least 3 characters';
+        if (formData.computer_name.trim().length < 3) {
+          tempErrors.computer_name = 'Device name must be at least 3 characters';
           isValid = false;
         }
 
-        if (!formData.location.trim()) {
-            tempErrors.location = 'Location is required';
+        if (!formData.model.trim()) {
+            tempErrors.model = 'Device modelis required';
             isValid = false;
         }
 
-        if (!formData.deviceModel.trim()) {
-            tempErrors.deviceModel = 'Device modelis required';
+        if (!formData.serial_number.trim()) {
+            tempErrors.serial_number = 'Serial ID is required';
             isValid = false;
         }
 
-        if (!formData.serialNumber.trim()) {
-            tempErrors.serialNumber = 'Serial ID is required';
+        if (!formData.specs.trim()) {
+            tempErrors.specs = 'Specification is required';
             isValid = false;
         }
 
-        if (!formData.specification.trim()) {
-            tempErrors.specification = 'Specification is required';
-            isValid = false;
-        }
-
-        if (!formData.dusername.trim()) {
-            tempErrors.dusername = 'Username is required';
-            isValid = false;
-        }
-      
-        // Password Strength Validation
-        if (formData.dpassword.length < 6) {
-          tempErrors.dpassword = 'Password must be at least 6 characters';
-          isValid = false;
-        }
-      
         setErrors(tempErrors);
         return isValid;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         // Add your submit logic here
-        console.log('Device Name:', deviceName);
-        console.log('Device Type:', deviceType);
+        try {
+            const response = await axios.post("http://localhost:5000/add-device", formData);
+            alert("Data submitted successfully!");
+            console.log("Response:", response.data.deviceId);
+            navigate(`/device-info/${response.data.deviceId}`)
+        } catch (error) {
+            console.error("Error submitting data:", error);
+            alert("Failed to submit data.");
+        }
     };
 
     return (
-        <div className="d-flex justify-content-center align-items-center top-0">
-            <div className="container py-4" style={{height: "100vh"}}>
+        <div className="d-flex justify-content-center align-items-center" style={{margin: "auto"}}>
+            <div className="container pb-4" >   
                 <NavBar />
                 <div className="d-flex justify-content-start mb-3">
                     <Button variant="outline-primary" className="d-flex align-items-center border-0 fw-bold" onClick={() => navigate(-1)}>
@@ -149,19 +108,19 @@ const AddDevice = () => {
                             <form className="d-flex justify-content-center">
                                 <div className="row mt-3 text-start w-100 ps-3 pe-3 pt-3">
                                 <div className="col-md-4">
-                                        <label htmlFor="deviceModel" className="form-label">Computer Name</label>
-                                        <input type="text" className="form-control" id="deviceName" name='deviceName' value={formData.deviceName} placeholder="Computer Name" onChange={handleChange}/>
-                                        {errors.deviceName && <p style={{ color: 'red' }}>{errors.deviceName}</p>}
+                                        <label htmlFor="model" className="form-label">Computer Name</label>
+                                        <input type="text" className="form-control" id="computer_name" name='computer_name' value={formData.computer_name} placeholder="Computer Name" onChange={handleChange}/>
+                                        {errors.computer_name && <p style={{ color: 'red' }}>{errors.formData.computer_name}</p>}
                                     </div>
                                     <div className="col-md-4 ">
-                                        <label htmlFor="deviceModel" className="form-label">Model</label>
-                                        <input type="text" className="form-control" id="deviceModel" name='deviceModel' value={formData.deviceModel} placeholder="Device Model" onChange={handleChange}/>
-                                        {errors.deviceModel && <p style={{ color: 'red' }}>{errors.deviceModel}</p>}
+                                        <label htmlFor="model" className="form-label">Model</label>
+                                        <input type="text" className="form-control" id="model" name='model' value={formData.model} placeholder="Device Model" onChange={handleChange}/>
+                                        {errors.model && <p style={{ color: 'red' }}>{errors.model}</p>}
                                     </div>
                                     <div className="col-md-4 ">
                                         <label htmlFor="serialId" className="form-label">Serial Number</label>
-                                        <input type="text" className="form-control" id="serialNumber" name='serialNumber' value={formData.serialNumber} placeholder="Serial ID" onChange={handleChange}/>
-                                        {errors.serialNumber && <p style={{ color: 'red' }}>{errors.serialNumber}</p>}
+                                        <input type="text" className="form-control" id="serial_number" name='serial_number' value={formData.serial_number} placeholder="Serial ID" onChange={handleChange}/>
+                                        {errors.serial_number && <p style={{ color: 'red' }}>{errors.serial_number}</p>}
                                     </div>
                                     
                                 </div>
@@ -170,16 +129,16 @@ const AddDevice = () => {
                                 <div className="row text-start w-100 p-3">
                                     <div className="col-md-4 ">
                                         <label htmlFor="serialId" className="form-label">Device Type</label>
-                                        <select className="form-select" aria-label="Default select example" id='deviceType' name='deviceType' value={formData.deviceType} onChange={handleChange}>
+                                        <select className="form-select" aria-label="Default select example" id='device_type' name='device_type' value={formData.device_type} onChange={handleChange}>
                                             <option selected >Open this select menu</option>
                                             <option value="LAPTOP">LAPTOP</option>
                                             <option value="DESKTOP">DESKTOP</option>
                                         </select>
-                                        {errors.deviceType && <p style={{ color: 'red' }}>{errors.deviceType }</p>}
+                                        {errors.device_type && <p style={{ color: 'red' }}>{errors.device_type }</p>}
                                     </div>
                                     <div className="col-md-4">
                                         <label htmlFor="serialId" className="form-label">Device Brand</label>
-                                        <select className="form-select" aria-label="Default select example" id='deviceBrand' name='deviceBrand' value={formData.deviceBrand} onChange={handleChange}>
+                                        <select className="form-select" aria-label="Default select example" id='brand' name='brand' value={formData.brand} onChange={handleChange}>
                                             <option selected >Open this select menu</option>
                                             <option value="ACER">ACER</option>
                                             <option value="APPLE">APPLE</option>
@@ -190,48 +149,47 @@ const AddDevice = () => {
                                             <option value="LENOVO">LENOVO</option>
                                             <option value="MSI">MSI</option>
                                         </select>
-                                        {errors.deviceBrand && <p style={{ color: 'red' }}>{errors.deviceBrand}</p>}
+                                        {errors.brand && <p style={{ color: 'red' }}>{errors.brand}</p>}
                                     </div>
                                     <div className="col-md-4">
-                                        <label htmlFor="condition" className="form-label">Condition</label>
-                                        <input type="text" className="form-control" id="condition" name='condition' value={formData.condition} placeholder="Device Name" onChange={handleChange}/>
-                                        {errors.condition && <p style={{ color: 'red' }}>{errors.condition}</p>}
+                                        <label htmlFor="status" className="form-label">Status</label>
+                                        <select className="form-select" aria-label="Default select example" id='status' name='status' value={formData.status} onChange={handleChange}>
+                                            <option selected disabled>Select an option</option>
+                                            <option value="Released">Released</option>
+                                            <option value="Available">Available</option>
+                                            <option value="Defective">Defective</option>
+                                        </select>
+                                        
                                     </div>
+                                    
                                 </div>
                             </form>
                             <form className="d-flex justify-content-center">
                                    
                                 <div className="row mb-3 text-start w-100 ps-3 pe-3">
                                     <div className="col-md-6 ">
-                                        <label htmlFor="deviceModel" className="form-label">Specification</label>
-                                        <textarea type="text" className="form-control" id="specification" name='specification' value={formData.specification} placeholder="Device Specification" onChange={handleChange} rows='3'/>
-                                        {errors.specification && <p style={{ color: 'red' }}>{errors.specification}</p>}
+                                        <label htmlFor="specs" className="form-label">Specification</label>
+                                        <textarea type="text" className="form-control" id="specs" name='specs' value={formData.specs} placeholder="Device Specification" onChange={handleChange} rows='3'/>
+                                        {errors.specs && <p style={{ color: 'red' }}>{errors.specs}</p>}
                                     </div>
                                     <div className="col-md-6">
-                                        <label htmlFor="deviceModel" className="form-label">Remarks</label>
-                                        <textarea type="text" className="form-control" id="deviceName" name='deviceName' value={formData.deviceName} placeholder="Remarks" onChange={handleChange} rows='3'/>
-                                        {errors.deviceName && <p style={{ color: 'red' }}>{errors.deviceName}</p>}
+                                        <label htmlFor="model" className="form-label">Remarks</label>
+                                        <textarea type="text" className="form-control" id="remarks" name='remarks' value={formData.remarks} placeholder="Remarks" onChange={handleChange} rows='3'/>
                                     </div>
-                               
-                                    
                                 </div>
                             </form>
-                            <form className="d-flex justify-content-center">
+                            <form className="d-flex justify-content-center mb-3">
                                 <div className="row mb-3 text-start w-100 ps-3 pe-3"> 
                                     <div className="col-md-8">
-                                        <label htmlFor="serialId" className="form-label">Last Device User</label>
-                                        <input type="text" className="form-control" id="lastDeviceUser" name='lastDeviceUser' value={formData.lastDeviceUser} placeholder="Last Device User" onChange={handleChange}/>
+                                        <label htmlFor="last_device_user" className="form-label">Last Device User</label>
+                                        <input type="text" className="form-control" id="last_device_user" name='last_device_user' value={formData.last_device_user} placeholder="Last Device User" onChange={handleChange}/>
                                     </div>
-                                    <div className="col-md-4">
-                                        <label htmlFor="serialId" className="form-label">Status</label>
-                                        <input type="text" className="form-control" id="status" name='status' value={formData.status} placeholder="Status" onChange={handleChange}/>
-                                    </div>
-                                    
                                 </div>
                             </form>
+
                             <div className="d-flex justify-content-end mb-3 pe-1">
-                                <Button type='button' className="d-flex align-items-center me-4" >
-                                    Add &nbsp;<ArrowRight className="me-2" />
+                                <Button type='button' className="d-flex align-items-center me-4" onClick={handleSubmit}>
+                                     <Plus className="me-2" /> Add &nbsp;
                                 </Button>
                                 
                             </div>

@@ -6,8 +6,10 @@ const mysqlp = require('mysql2/promise');
 const app = express();
 const port = 5000;
 const cors = require('cors');
+const path = require('path');
 
-
+app.use(express.urlencoded({ extended: true })); 
+app.use(express.json());
 app.use(cors());
 
 const db = mysql.createConnection({
@@ -22,41 +24,65 @@ const dbPromise = mysqlp.createPool({ host: 'localhost',
     password: '',
     database: 'device_management' });
 
-async function createPdf(input, output) {
+
+async function createPdf(input, output,devices) {
     try {
+        console.log("Populating PDF fields with:", devices[0]); // Log first device data
+
+        // Assuming only one device is used per PDF, take the first item in the array
+        const device = devices[0]; 
         const pdfDoc = await PDFDocument.load(await readFile(input));
-    
-        // Modify doc, fill out the form...
-        const fieldNames = pdfDoc
-        .getForm()
-        .getFields()
-        .map((f) => f.getName());
-        console.log({ fieldNames });
-    
         const form = pdfDoc.getForm();
-    
-        form.getTextField('Name').setText('Lance Bernal');
-        form.getTextField('Serial Number').setText('1234567890');
-        form.getTextField('Specification').setText('i5; 8GB RAM; 256GB SSD');
-        form.getTextField('Model').setText('Dell Latitude E7470');
-        form.getTextField('Brand').setText('Dell');
-        form.getTextField('Device Type').setText('Laptop');
-        form.getTextField('Username').setText('lbernal');
-        form.getTextField('Password').setText('Allvalue@2025');
-    
-        
-    
-    
+
+        // Fill out form fields
+        form.getTextField('Name').setText(`${device.fname} ${device.lname}`.trim());
+        form.getTextField('Date').setText(device.release_date ? device.release_date.split(" ")[0] : "");
+        form.getTextField('Serial Number').setText(device.serial_number);
+        form.getTextField('Specification').setText(device.specs);
+        form.getTextField('Model').setText(device.model);
+        form.getTextField('Brand').setText(device.brand);
+        form.getTextField('Device Type').setText(device.device_type);
+        form.getTextField('Username').setText(device.acc_username || "");
+        form.getTextField('Password').setText(device.acc_password || ""); 
+
         const pdfBytes = await pdfDoc.save();
-    
         await writeFile(output, pdfBytes);
         console.log('PDF created!');
+
+        return output;
     } catch (err) {
-        console.log(err);
+        console.error(err);
+        throw err;
     }
 }
+
+app.post('/generate-pdf', async (req, res) => {
+    try {
+        console.log("Incoming request data:", req.body);
+
+        let { devices } = req.body;; // Extract `device` array
+
+        if (!Array.isArray(devices)) {
+            if (devices && typeof devices === "object") {
+                devices = [devices]; // Convert single object to array
+            } else {
+                console.error("❌ Invalid request format: expected a non-empty array or object.");
+                return res.status(400).json({ error: "Invalid request format, expected a non-empty array or object" });
+            }
+        }
+
+        const inputPath  = path.join(__dirname, 'accountability_template.pdf');
+        const outputPath = path.join(__dirname, 'output.pdf');
+
+        await createPdf(inputPath, outputPath, devices);
+
+        res.download(outputPath, 'output.pdf'); // Send the file to the client
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to generate PDF' });
+    }
+});
       
-createPdf('accountability_template.pdf', 'output.pdf');
+//createPdf('accountability_template.pdf', 'output.pdf');
 
 app.use(express.json()); // For JSON requests
 app.use(express.urlencoded({ extended: true })); // For form data
@@ -125,31 +151,60 @@ app.get('/location', (req, res) => {
     });
 });
 
-/* app.get('/device', (req, res) => {
-    db.query('SELECT * FROM device', (err, results) => {
+app.get('/available-device', (req, res) => {
+    const { serial } = req.query; // Get serial_number from query params
+    const query = `SELECT * FROM device WHERE status = "Available" AND serial_number LIKE ? LIMIT 5`; 
+
+    db.query(query, [`%${serial}%`], (err, results) => {
         if (err) {
-            res.status(500).send  
+            console.error("❌ Error fetching available devices:", err);
+            return res.status(500).json({ error: "Internal server error" });
         }
-  
         if (results.length === 0) {
-          return res.status(404).json({ message: 'Device not found' });
+            return res.status(404).json({ message: 'No matching available devices found' });
         }
-    
+
         res.status(200).json(results);
     });
 });
- */
+
 
 app.get('/device', (req, res) => {
-    const { page = 1, limit = 10 } = req.query; // Default to page 1, 10 devices per page
+    const { page = 1, limit = 10, search = '' } = req.query;
     const offset = (page - 1) * limit;
 
-    db.query('SELECT * FROM device LIMIT ? OFFSET ?', [parseInt(limit), parseInt(offset)], (err, results) => {
+    let searchCondition = '';
+    let queryParams = [parseInt(limit), parseInt(offset)];
+
+    // Apply search filter only if search query is present
+    if (search.trim() !== '') {
+        searchCondition = `WHERE (d.computer_name LIKE ? OR d.serial_number LIKE ? OR e.fname LIKE ? OR e.lname LIKE ?)`;
+        queryParams = [`%${search}%`, `%${search}%`, `%${search}%`, `%${search}%`, parseInt(limit), parseInt(offset)];
+    }
+
+    db.query(`
+        SELECT d.*, a.release_date, e.fname, e.lname
+        FROM device d
+        LEFT JOIN assignment a ON d.device_id = a.device_id
+        LEFT JOIN employee e ON a.emp_id = e.emp_id
+        ${searchCondition}
+        ORDER BY d.device_id DESC
+        LIMIT ? OFFSET ?
+    `, queryParams, (err, results) => {
         if (err) {
             return res.status(500).json({ error: 'Database error' });
         }
 
-        db.query('SELECT COUNT(*) AS total FROM device', (err, countResults) => {
+        // Count total records (with or without search)
+        let countQuery = `
+            SELECT COUNT(*) AS total 
+            FROM device d
+            LEFT JOIN assignment a ON d.device_id = a.device_id
+            LEFT JOIN employee e ON a.emp_id = e.emp_id
+            ${search.trim() !== '' ? searchCondition : ''}
+        `;
+
+        db.query(countQuery, search.trim() !== '' ? [`%${search}%`, `%${search}%`, `%${search}%`, `%${search}%`] : [], (err, countResults) => {
             if (err) {
                 return res.status(500).json({ error: 'Database error' });
             }
@@ -160,73 +215,253 @@ app.get('/device', (req, res) => {
     });
 });
 
-/* app.get('/device/:id', (req, res) => {
-    const id = req.params.id;
-    db.query('SELECT * FROM device WHERE device_id = ?', [id], (err, results) => {
+
+
+app.get('/assigned-device', (req, res) => {
+    const { page = 1, limit = 10, search = '' } = req.query;
+    const offset = (page - 1) * limit;
+
+    let searchCondition = '';
+    let queryParams = [parseInt(limit), parseInt(offset)];
+
+    // Apply search filter only if search query is present
+    if (search.trim() !== '') {
+        searchCondition = `AND (e.fname LIKE ? OR e.lname LIKE ?)`;
+        queryParams = [`%${search}%`, `%${search}%`, parseInt(limit), parseInt(offset)];
+    }
+
+    db.query(`
+        SELECT d.computer_name, d.serial_number, d.device_id, a.release_date, 
+               e.fname, e.lname, dept.dept_name, bu.bu_name
+        FROM device d
+        LEFT JOIN assignment a ON d.device_id = a.device_id
+        LEFT JOIN employee e ON a.emp_id = e.emp_id
+        LEFT JOIN department dept ON e.dept_id = dept.dept_id
+        LEFT JOIN business_unit bu ON e.bu_id = bu.bu_id
+        WHERE d.status = 'Released' ${searchCondition}
+        ORDER BY d.device_id DESC
+        LIMIT ? OFFSET ?
+    `, queryParams, (err, results) => {
         if (err) {
-            res.status(500).send  
+            return res.status(500).json({ error: 'Database error' });
         }
-  
-        if (results.length === 0) {
-          return res.status(404).json({ message: 'Device not found' });
-        }
-    
-        res.status(200).json(results);
+
+        // Count total records (with or without search)
+        let countQuery = `
+            SELECT COUNT(*) AS total 
+            FROM device d
+            LEFT JOIN assignment a ON d.device_id = a.device_id
+            LEFT JOIN employee e ON a.emp_id = e.emp_id
+            WHERE d.status = 'Released' ${search.trim() !== '' ? searchCondition : ''}
+        `;
+
+        db.query(countQuery, search.trim() !== '' ? [`%${search}%`, `%${search}%`] : [], (err, countResults) => {
+            if (err) {
+                return res.status(500).json({ error: 'Database error' });
+            }
+
+            const total = countResults[0].total;
+            res.status(200).json({ data: results, total, page: parseInt(page), limit: parseInt(limit) });
+        });
     });
-}); */
+});
+
+
 
 app.get('/device/:id', (req, res) => {
     const id = req.params.id;
-    db.query(`SELECT 
-                a.ass_id,
-                a.release_date,
-                a.return_date,
-                a.remarks,
-                a.acc_username,
-                a.acc_password,
-                
-                e.emp_id,
-                e.fname,
-                e.lname,
-                e.mname,
-                e.phone_no,
-                e.email,
-                e.emp_status,
 
-                d.device_id,
-                d.computer_name,
-                d.serial_number,
-                d.model,
-                d.device_type,
-                d.brand,
-                d.specs,
-                d.status,
-                d.remarks,
-                d.last_device_user,
+    const sql = `
+        SELECT 
+            d.device_id,
+            d.computer_name,
+            d.serial_number,
+            d.model,
+            d.device_type,
+            d.brand,
+            d.specs,
+            d.status,
+            d.remarks,
+            d.last_device_user,
 
-                dep.dept_name,
-                des.des_name,
-                loc.loc_name,
-                bu.bu_name
+            a.ass_id,
+            a.release_date,
+            a.return_date,
+            a.requestor,
+            a.acc_username,
+            a.acc_password,
 
-            FROM assignment a
-            JOIN employee e ON a.emp_id = e.emp_id
-            JOIN device d ON a.device_id = d.device_id
-            JOIN department dep ON e.dept_id = dep.dept_id
-            JOIN designation des ON e.des_id = des.des_id
-            JOIN location loc ON e.loc_id = loc.loc_id
-            JOIN business_unit bu ON e.bu_id = bu.bu_id
-            WHERE d.device_id = ?;
-            `, [id], (err, results) => {
+            e.emp_id,
+            e.fname,
+            e.lname,
+            e.mname,
+            e.phone_no,
+            e.email,
+            e.emp_status,
+
+            dep.dept_name,
+            des.des_name,
+            loc.loc_name,
+            bu.bu_name
+
+        FROM device d
+        LEFT JOIN assignment a ON d.device_id = a.device_id
+        LEFT JOIN employee e ON a.emp_id = e.emp_id
+        LEFT JOIN department dep ON e.dept_id = dep.dept_id
+        LEFT JOIN designation des ON e.des_id = des.des_id
+        LEFT JOIN location loc ON e.loc_id = loc.loc_id
+        LEFT JOIN business_unit bu ON e.bu_id = bu.bu_id
+        WHERE d.device_id = ?;
+    `;
+
+    db.query(sql, [id], (err, results) => {
         if (err) {
-            res.status(500).send  
+            console.error("Database error:", err);
+            return res.status(500).json({ error: "Database error" });
         }
-  
+
         if (results.length === 0) {
-          return res.status(404).json({ message: 'Device not found' });
+            return res.status(404).json({ message: "Device not found" });
         }
-    
-        res.status(200).json(results);
+
+        const deviceData = results[0];
+
+        // If no assignment, return only device info
+        if (!deviceData.ass_id) {
+            return res.status(200).json({
+                device_id: deviceData.device_id,
+                computer_name: deviceData.computer_name,
+                serial_number: deviceData.serial_number,
+                model: deviceData.model,
+                device_type: deviceData.device_type,
+                brand: deviceData.brand,
+                specs: deviceData.specs,
+                status: deviceData.status,
+                remarks: deviceData.remarks,
+                last_device_user: deviceData.last_device_user,
+            });
+        }
+
+        // Otherwise, return full data with assignment and employee details
+        res.status(200).json(deviceData);
+    });
+});
+
+
+app.post("/add-device", (req, res) => {
+    const {
+        computer_name,
+        model,
+        serial_number,
+        device_type,
+        brand,
+        specs,
+        remarks,
+        last_device_user,
+        status
+    } = req.body;
+
+    const sql = `
+        INSERT INTO device (computer_name, model, serial_number, device_type, brand, specs, remarks, last_device_user, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    db.query(sql, [computer_name, model, serial_number, device_type, brand, specs, remarks, last_device_user, status], (err, result) => {
+        if (err) {
+            console.error("Error inserting data:", err);
+            return res.status(500).json({ error: "Failed to insert data" });
+        }
+        res.status(201).json({ message: "Device added successfully", deviceId: result.insertId });
+    });
+});
+
+app.post('/add-entry', (req, res) => {
+    const {
+        fname, lname, mi, phone_no, email, emp_status,
+        department, designation, business_unit, location,
+        computer_name, model, serial_number, device_type, brand, specs, remarks, status, last_device_user,
+        acc_username, acc_password, requestor
+    } = req.body;
+
+    db.beginTransaction(err => {
+        if (err) {
+            return res.status(500).json({ error: 'Transaction error' });
+        }
+
+        // Check if serial number exists
+        const checkDevice = `SELECT device_id FROM device WHERE serial_number = ?`;
+
+        db.query(checkDevice, [serial_number], (err, deviceResults) => {
+            if (err) {
+                return db.rollback(() => res.status(500).json({ error: 'Error checking device', details: err }));
+            }
+
+            if (deviceResults.length > 0) {
+                // Device exists -> Update status only
+                const existingDeviceId = deviceResults[0].device_id;
+
+                const updateDeviceStatus = `UPDATE device SET status = ? WHERE device_id = ?`;
+                db.query(updateDeviceStatus, [status, existingDeviceId], (err) => {
+                    if (err) {
+                        return db.rollback(() => res.status(500).json({ error: 'Failed to update device status', details: err }));
+                    }
+
+                    db.commit(err => {
+                        if (err) {
+                            return db.rollback(() => res.status(500).json({ error: 'Commit failed', details: err }));
+                        }
+                        return res.status(200).json({ message: 'Device status updated successfully', device_id: existingDeviceId });
+                    });
+                });
+
+            } else {
+                // Device does NOT exist -> Insert new employee, device, and assignment
+                const insertEmployee = `
+                    INSERT INTO employee (fname, lname, mname, phone_no, email, emp_status, dept_id, des_id, bu_id, loc_id) 
+                    VALUES (?, ?, ?, ?, ?, ?, 
+                        (SELECT dept_id FROM department WHERE dept_name = ?),
+                        (SELECT des_id FROM designation WHERE des_name = ?),
+                        (SELECT bu_id FROM business_unit WHERE bu_name = ?),
+                        (SELECT loc_id FROM location WHERE loc_name = ?))`;
+
+                db.query(insertEmployee, [fname, lname, mi, phone_no, email, emp_status, department, designation, business_unit, location], (err, employeeResult) => {
+                    if (err) {
+                        return db.rollback(() => res.status(500).json({ error: 'Failed to insert employee', details: err }));
+                    }
+                    const emp_id = employeeResult.insertId;
+
+                    // Insert new device
+                    const insertDevice = `
+                        INSERT INTO device (computer_name, model, serial_number, device_type, brand, specs, status, remarks, last_device_user)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+                    db.query(insertDevice, [computer_name, model, serial_number, device_type, brand, specs, status, remarks, last_device_user], (err, deviceResult) => {
+                        if (err) {
+                            return db.rollback(() => res.status(500).json({ error: 'Failed to insert device', details: err }));
+                        }
+                        const device_id = deviceResult.insertId;
+
+                        // Insert into assignment table
+                        const insertAssignment = `
+                            INSERT INTO assignment (release_date, return_date, requestor, acc_username, acc_password, emp_id, device_id)
+                            VALUES (NOW(), NULL, ?, ?, ?, ?, ?)`;
+
+                        db.query(insertAssignment, [requestor, acc_username, acc_password, emp_id, device_id], (err) => {
+                            if (err) {
+                                return db.rollback(() => res.status(500).json({ error: 'Failed to insert assignment', details: err }));
+                            }
+
+                            db.commit(err => {
+                                if (err) {
+                                    return db.rollback(() => res.status(500).json({ error: 'Commit failed', details: err }));
+                                }
+                                return res.status(200).json({ message: 'Entry added successfully', emp_id, device_id });
+                            });
+                        });
+                    });
+                });
+            }
+        });
     });
 });
 

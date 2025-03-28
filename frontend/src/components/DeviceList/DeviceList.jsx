@@ -5,7 +5,8 @@ import { Plus, ThreeDotsVertical } from 'react-bootstrap-icons';
 import NavBar from '../NavBar/NavBar';
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faCircle } from '@fortawesome/free-solid-svg-icons';
+import StatusLabel from '../StatusLabel/StatusLabel';
 
 
 
@@ -19,18 +20,28 @@ const DeviceList = () => {
     const limit = 10; // Devices per page
 
     useEffect(() => {
-        getDevices();
-    }, [page]);
+            const delayDebounce = setTimeout(() => {
+                getDevices();
+            }, 500); // Debounce API call (wait 500ms after last keystroke)
+    
+            return () => clearTimeout(delayDebounce); // Cleanup function
+        }, [search, page]); // Fetch when search or page changes
 
     const getDevices = async () => {
         try {
-            const res = await fetch(`http://localhost:5000/device?page=${page}&limit=${limit}`);
+            const query = new URLSearchParams({ page, limit, search }).toString();
+            const res = await fetch(`http://localhost:5000/device?${query}`);
             const jsonData = await res.json();
             setDevice(jsonData.data);
             setTotalPages(Math.ceil(jsonData.total / limit));
         } catch (err) {
             console.error(err.message);
         }
+    };
+
+    const handleReset = () => {
+        setSearch("");
+        setPage(1);
     };
 
     const getPaginationItems = () => {
@@ -53,7 +64,6 @@ const DeviceList = () => {
         return items;
     };
 
-
     return (
         <div className="d-flex justify-content-center align-items-center " style={{margin: "auto"}}>
             {/* <AdminTopNavbar /> */}
@@ -69,9 +79,16 @@ const DeviceList = () => {
                     </Link>
                     
                 </div>
-                <div className="d-flex justify-content-start mb-3">
-                    <Form.Control type="text" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} className="me-2 w-50" />
+                <div className="d-flex justify-content-start mb-3 ms-2">
+                    <Form.Control 
+                        type="text" 
+                        placeholder="Search computer name or serial number..." 
+                        value={search} 
+                        onChange={(e) => setSearch(e.target.value)} 
+                        className="me-2 w-50" 
+                    />
                     <Button variant="primary" className="ps-4 pe-4">Search</Button>
+                    <Button variant="warning" className="ps-4 pe-4 ms-2" onClick={handleReset}>Reset</Button>
                 </div>
                 <div>
                     <Card className="border-0">
@@ -79,35 +96,37 @@ const DeviceList = () => {
                             <div className='' style={{height: '50vh', width: '100%', display: 'inline-block'}}>
 
                             
-                                <table className='table table-striped table-bordered table-hover' >
+                                <table className='table table-striped  table-hover table-bordered' >
                                     <thead>
                                     <tr className="row text-center">    
-                                        <th className="col-3">Computer Name</th>
-                                        <th className="col-2">Serial No.</th>
-                                        <th className="col-2">Model</th>
-                                        <th className="col-2">Type</th>
-                                        <th className="col">Last User</th>
+                                        <th className="col-2">Computer Name</th>
+                                        <th className="col-3">Serial No.</th>
+                                        <th className="col-3">Model</th>
+                                        <th className="col">Release Date</th>
+                                        <th className="col-2">Status</th>
+                                        
                                     </tr>
                                     </thead>
                                     <tbody className='overflow-auto' style={{height: '50vh'}}>
-                                    {Array.isArray(device) && device.length > 0 ? (
-                                        device.map((item, index) => (
-                                                <tr className="row text-center" key={index} onClick={() => navigate(`/device-info/${item.device_id}`)}>
+                                        {Array.isArray(device) && device.length > 0 ? (
+                                            device.map((item, index) => (
+                                                    <tr className="row text-center" key={index} onClick={() => navigate(`/device-info/${item.device_id}`)}>
 
-                                                        <td className="col-3">{item.computer_name}</td>
-                                                        <td className="col-2">{item.serial_number}</td>
-                                                        <td className="col-2">{item.model}</td>
-                                                        <td className="col-2">{item.device_type}</td>
-                                                        <td className="col">{item.last_device_user}</td>
-                                                
-                                                </tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td colSpan="5" className="text-center">No devices found.</td>
-                                        </tr>
-                                    )}
-                                    
+                                                            <td className="col-2">{item.computer_name}</td>
+                                                            <td className="col-3 word-wrap">{item.serial_number}</td>
+                                                            <td className="col-3">{item.model}</td>
+                                                            <td className="col-2">{item.release_date ? item.release_date.split(" ")[0] : ""}</td>
+                                                            <td className="col-2"><StatusLabel status = {item.status}/></td>
+                                                            
+                                                    
+                                                    </tr>
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan="5" className="text-center">No devices found.</td>
+                                            </tr>
+                                        )}
+                                        
                                     </tbody>
 
                                     
