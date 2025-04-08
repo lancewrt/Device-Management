@@ -4,6 +4,7 @@ import axios from 'axios';
 const AutoSuggestInput = ({ label, name, value, setFormData, error, endpoint }) => {
   const [query, setQuery] = useState(value || '');
   const [suggestions, setSuggestions] = useState([]);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
   const handleInputChange = async (e) => {
     const val = e.target.value.toUpperCase();
@@ -33,6 +34,31 @@ const AutoSuggestInput = ({ label, name, value, setFormData, error, endpoint }) 
     console.log("name", item[`${name}_name`]);
    
     setSuggestions([]);
+  };
+
+  const handleKeyDown = (e) => {
+    if (suggestions.length === 0) return;
+
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        setHighlightedIndex((prev) => (prev + 1) % suggestions.length);
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setHighlightedIndex((prev) =>
+          prev === 0 || prev === -1 ? suggestions.length - 1 : prev - 1
+        );
+        break;
+      case "Enter":
+        e.preventDefault();
+        if (highlightedIndex >= 0 && suggestions[highlightedIndex]) {
+          handleSelect(suggestions[highlightedIndex]);
+        }
+        break;
+      default:
+        break;
+    }
   };
 
   const handleBlur = async () => {
@@ -66,6 +92,7 @@ const AutoSuggestInput = ({ label, name, value, setFormData, error, endpoint }) 
         value={query}
         onChange={handleInputChange}
         onBlur={() => {setTimeout(() => setSuggestions([]), 150); setTimeout(() => handleBlur(), 7000)}}
+        onKeyDown={handleKeyDown}
         autoComplete="off"
         style={{ zIndex: 2, position: 'relative' }}
       />
@@ -74,7 +101,9 @@ const AutoSuggestInput = ({ label, name, value, setFormData, error, endpoint }) 
           {suggestions.map((item, idx) => (
             <li
               key={idx}
-              className="list-group-item list-group-item-action"
+              className={`list-group-item list-group-item-action ${
+                idx === highlightedIndex ? 'active' : ''
+              }`}
               onClick={() => handleSelect(item)}
               style={{ cursor: 'pointer' }}
             >
