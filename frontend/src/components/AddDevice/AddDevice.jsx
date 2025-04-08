@@ -1,18 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
-import { Button, Card } from 'react-bootstrap';
-import { ArrowLeft, ArrowRight, Plus } from 'react-bootstrap-icons';
-import NavBar from '../NavBar/NavBar';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-
+import { faArrowLeft, faPlus } from '@fortawesome/free-solid-svg-icons';
+import NavBar from '../NavBar/NavBar';
+import './AddDevice.css';
 
 const AddDevice = () => {
     const navigate = useNavigate();
- 
     const [errors, setErrors] = useState({});
-   
     const [formData, setFormData] = useState({
         computer_name: '',
         model: '',
@@ -22,7 +18,7 @@ const AddDevice = () => {
         specs: '',
         remarks: '',
         last_device_user: '',
-        status: 'Select an option',
+        status: '',
     });
 
     const handleChange = (e) => {
@@ -37,7 +33,7 @@ const AddDevice = () => {
         let tempErrors = {};
         let isValid = true;
       
-        if (formData.brand === 'Open this select menu') {
+        if (!formData.brand || formData.brand === 'Open this select menu') {
             tempErrors.brand = 'Please select a device brand';
             isValid = false;
         }
@@ -48,7 +44,7 @@ const AddDevice = () => {
         }
 
         if (!formData.model.trim()) {
-            tempErrors.model = 'Device modelis required';
+            tempErrors.model = 'Device model is required';
             isValid = false;
         }
 
@@ -68,78 +64,117 @@ const AddDevice = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Add your submit logic here
-        try {
-            const response = await axios.post("http://localhost:5000/add-device", formData);
-            alert("Data submitted successfully!");
-            console.log("Response:", response.data.deviceId);
-            navigate(`/device-info/${response.data.deviceId}`)
-        } catch (error) {
-            console.error("Error submitting data:", error);
-            alert("Failed to submit data.");
+        if (validateForm()) {
+            try {
+                const response = await axios.post("http://localhost:5000/add-device", formData);
+                navigate(`/device-info/${response.data.deviceId}`);
+            } catch (error) {
+                console.error("Error submitting data:", error);
+                alert("Failed to submit data.");
+            }
         }
     };
 
     return (
-        <div className="d-flex justify-content-center align-items-center" style={{margin: "auto"}}>
-            <div className="container pb-4" >   
-                <NavBar />
-                <div className="d-flex justify-content-start mb-3">
-                    <Button variant="outline-primary" className="d-flex align-items-center border-0 fw-bold" onClick={() => navigate(-1)}>
-                        <FontAwesomeIcon icon={faArrowLeft} size='xl' className='d-flex justify-content-left border-0 pe-2'/> Back
-                    </Button>
-                    
+        <div className="add-device-container">
+            <NavBar />
+            <div className="container">
+                <button 
+                    className="back-button"
+                    onClick={() => navigate(-1)}
+                >
+                    <FontAwesomeIcon icon={faArrowLeft} className="back-icon" />
+                    Back
+                </button>
+                
+                <div className="page-header">
+                    <h2 className="page-title">Add Device</h2>
                 </div>
-                <div className="d-flex mb-3">
-                    
-                </div>
-                <h3 className='text-start fw-bold'>Add Device</h3>
-                <Card> 
-                    <Card.Body>
-                    <nav>
-                        <div className="nav nav-tabs" id="nav-tab" role="tablist">
-                            <button className="nav-link active" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="true">Device Info</button>
-                        </div>
-                    </nav>
-                    
-                    <div className="tab-content" id="nav-tabContent">
-
-                        <div className="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                            <form className="d-flex justify-content-center">
-                                <div className="row mt-3 text-start w-100 ps-3 pe-3 pt-3">
-                                <div className="col-md-4">
-                                        <label htmlFor="model" className="form-label">Computer Name</label>
-                                        <input type="text" className="form-control" id="computer_name" name='computer_name' value={formData.computer_name} placeholder="Computer Name" onChange={handleChange}/>
-                                        {errors.computer_name && <p style={{ color: 'red' }}>{errors.formData.computer_name}</p>}
+                
+                <div className="device-form-card">
+                    <div className="card-body">
+                        <form onSubmit={handleSubmit}>
+                            {/* First row */}
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <div className="floating-form-group">
+                                        <input 
+                                            type="text" 
+                                            className={errors.computer_name ? 'form-input error' : 'form-input'} 
+                                            id="computer_name" 
+                                            name="computer_name" 
+                                            value={formData.computer_name} 
+                                            onChange={handleChange}
+                                            placeholder=" "
+                                        />
+                                        <label htmlFor="computer_name" className="floating-label">Computer Name</label>
+                                        {errors.computer_name && <div className="error-message">{errors.computer_name}</div>}
                                     </div>
-                                    <div className="col-md-4 ">
-                                        <label htmlFor="model" className="form-label">Model</label>
-                                        <input type="text" className="form-control" id="model" name='model' value={formData.model} placeholder="Device Model" onChange={handleChange}/>
-                                        {errors.model && <p style={{ color: 'red' }}>{errors.model}</p>}
-                                    </div>
-                                    <div className="col-md-4 ">
-                                        <label htmlFor="serialId" className="form-label">Serial Number</label>
-                                        <input type="text" className="form-control" id="serial_number" name='serial_number' value={formData.serial_number} placeholder="Serial ID" onChange={handleChange}/>
-                                        {errors.serial_number && <p style={{ color: 'red' }}>{errors.serial_number}</p>}
-                                    </div>
-                                    
                                 </div>
-                            </form>
-                            <form className="d-flex justify-content-center">
-                                <div className="row text-start w-100 p-3">
-                                    <div className="col-md-4 ">
-                                        <label htmlFor="serialId" className="form-label">Device Type</label>
-                                        <select className="form-select" aria-label="Default select example" id='device_type' name='device_type' value={formData.device_type} onChange={handleChange}>
-                                            <option selected >Open this select menu</option>
+                                
+                                <div className="form-group">
+                                    <div className="floating-form-group">
+                                        <input 
+                                            type="text" 
+                                            className={errors.model ? 'form-input error' : 'form-input'} 
+                                            id="model" 
+                                            name="model" 
+                                            value={formData.model} 
+                                            onChange={handleChange}
+                                            placeholder=" "
+                                        />
+                                        <label htmlFor="model" className="floating-label">Model</label>
+                                        {errors.model && <div className="error-message">{errors.model}</div>}
+                                    </div>
+                                </div>
+                                
+                                <div className="form-group">
+                                    <div className="floating-form-group">
+                                        <input 
+                                            type="text" 
+                                            className={errors.serial_number ? 'form-input error' : 'form-input'} 
+                                            id="serial_number" 
+                                            name="serial_number" 
+                                            value={formData.serial_number} 
+                                            onChange={handleChange}
+                                            placeholder=" "
+                                        />
+                                        <label htmlFor="serial_number" className="floating-label">Serial Number</label>
+                                        {errors.serial_number && <div className="error-message">{errors.serial_number}</div>}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            {/* Second row */}
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <div className="floating-form-group">
+                                        <select 
+                                            className={errors.device_type ? 'form-select error' : 'form-select'} 
+                                            id="device_type" 
+                                            name="device_type" 
+                                            value={formData.device_type} 
+                                            onChange={handleChange}
+                                        >
+                                            <option value="" disabled>Select device type</option>
                                             <option value="LAPTOP">LAPTOP</option>
                                             <option value="DESKTOP">DESKTOP</option>
                                         </select>
-                                        {errors.device_type && <p style={{ color: 'red' }}>{errors.device_type }</p>}
+                                        <label htmlFor="device_type" className="floating-label">Device Type</label>
+                                        {errors.device_type && <div className="error-message">{errors.device_type}</div>}
                                     </div>
-                                    <div className="col-md-4">
-                                        <label htmlFor="serialId" className="form-label">Device Brand</label>
-                                        <select className="form-select" aria-label="Default select example" id='brand' name='brand' value={formData.brand} onChange={handleChange}>
-                                            <option selected >Open this select menu</option>
+                                </div>
+                                
+                                <div className="form-group">
+                                    <div className="floating-form-group">
+                                        <select 
+                                            className={errors.brand ? 'form-select error' : 'form-select'} 
+                                            id="brand" 
+                                            name="brand" 
+                                            value={formData.brand} 
+                                            onChange={handleChange}
+                                        >
+                                            <option value="" disabled>Select brand</option>
                                             <option value="ACER">ACER</option>
                                             <option value="APPLE">APPLE</option>
                                             <option value="ASUS">ASUS</option>
@@ -149,57 +184,89 @@ const AddDevice = () => {
                                             <option value="LENOVO">LENOVO</option>
                                             <option value="MSI">MSI</option>
                                         </select>
-                                        {errors.brand && <p style={{ color: 'red' }}>{errors.brand}</p>}
+                                        <label htmlFor="brand" className="floating-label">Device Brand</label>
+                                        {errors.brand && <div className="error-message">{errors.brand}</div>}
                                     </div>
-                                    <div className="col-md-4">
-                                        <label htmlFor="status" className="form-label">Status</label>
-                                        <select className="form-select" aria-label="Default select example" id='status' name='status' value={formData.status} onChange={handleChange}>
-                                            <option selected disabled>Select an option</option>
+                                </div>
+                                
+                                <div className="form-group">
+                                    <div className="floating-form-group">
+                                        <select 
+                                            className="form-select" 
+                                            id="status" 
+                                            name="status" 
+                                            value={formData.status} 
+                                            onChange={handleChange}
+                                        >
+                                            <option value="" disabled>Select status</option>
                                             <option value="Released">Released</option>
                                             <option value="Available">Available</option>
                                             <option value="Defective">Defective</option>
                                         </select>
-                                        
-                                    </div>
-                                    
-                                </div>
-                            </form>
-                            <form className="d-flex justify-content-center">
-                                   
-                                <div className="row mb-3 text-start w-100 ps-3 pe-3">
-                                    <div className="col-md-6 ">
-                                        <label htmlFor="specs" className="form-label">Specification</label>
-                                        <textarea type="text" className="form-control" id="specs" name='specs' value={formData.specs} placeholder="Device Specification" onChange={handleChange} rows='3'/>
-                                        {errors.specs && <p style={{ color: 'red' }}>{errors.specs}</p>}
-                                    </div>
-                                    <div className="col-md-6">
-                                        <label htmlFor="model" className="form-label">Remarks</label>
-                                        <textarea type="text" className="form-control" id="remarks" name='remarks' value={formData.remarks} placeholder="Remarks" onChange={handleChange} rows='3'/>
+                                        <label htmlFor="status" className="floating-label">Status</label>
                                     </div>
                                 </div>
-                            </form>
-                            <form className="d-flex justify-content-center mb-3">
-                                <div className="row mb-3 text-start w-100 ps-3 pe-3"> 
-                                    <div className="col-md-12">
-                                        <label htmlFor="last_device_user" className="form-label">Last Device User</label>
-                                        <input type="text" className="form-control" id="last_device_user" name='last_device_user' value={formData.last_device_user} placeholder="Last Device User" onChange={handleChange}/>
-                                    </div>
-                                </div>
-                            </form>
-
-                            <div className="d-flex justify-content-end mb-3 pe-1">
-                                <Button type='button' className="d-flex align-items-center me-4" onClick={handleSubmit}>
-                                     <Plus className="me-2" /> Add &nbsp;
-                                </Button>
-                                
                             </div>
-                        </div>
-  
-                    </div>
+                            
+                            {/* Third row - Textareas */}
+                            <div className="form-row">
+                                <div className="form-group textarea-group">
+                                    <div className="floating-form-group">
+                                        <textarea 
+                                            className={errors.specs ? 'form-textarea error' : 'form-textarea'} 
+                                            id="specs" 
+                                            name="specs" 
+                                            value={formData.specs} 
+                                            onChange={handleChange}
+                                            placeholder=" "
+                                        ></textarea>
+                                        <label htmlFor="specs" className="floating-label">Specification</label>
+                                        {errors.specs && <div className="error-message">{errors.specs}</div>}
+                                    </div>
+                                </div>
 
-                    </Card.Body>
-                </Card>
-            
+                                <div className="form-group textarea-group">
+                                    <div className="floating-form-group">
+                                        <textarea 
+                                            className="form-textarea" 
+                                            id="remarks" 
+                                            name="remarks" 
+                                            value={formData.remarks} 
+                                            onChange={handleChange}
+                                            placeholder=" "
+                                        ></textarea>
+                                        <label htmlFor="remarks" className="floating-label">Remarks</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            {/* Fourth row - Last Device User */}
+                            <div className="form-row">
+                                <div className="form-group full-width">
+                                    <div className="floating-form-group">
+                                        <input 
+                                            type="text" 
+                                            className="form-input" 
+                                            id="last_device_user" 
+                                            name="last_device_user" 
+                                            value={formData.last_device_user} 
+                                            onChange={handleChange}
+                                            placeholder=" "
+                                        />
+                                        <label htmlFor="last_device_user" className="floating-label">Last Device User</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="form-actions">
+                                <button type="submit" className="submit-button">
+                                    <FontAwesomeIcon icon={faPlus} className="button-icon" />
+                                    Add Device
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     );
