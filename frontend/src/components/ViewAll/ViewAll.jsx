@@ -110,13 +110,13 @@ const ViewAll = () => {
                     <div className='' style={{height: '50vh', width: '100%', display: 'inline-block'}}>
                     <table className='table table-striped  table-hover table-bordered' >
                         <thead>
-                        <tr className="row text-center">    
-                            <th className="col-3">Name</th>
-                            <th className="col-2">Department</th>
-                            <th className="col-2">Business Unit</th>
-                            <th className="col-2">Device Name</th>
-                            <th className="col">Serial Number</th>
-                        </tr>
+                            <tr className="row text-center">    
+                                <th className="col-3">Name</th>
+                                <th className="col-2">Department</th>
+                                <th className="col-2">Business Unit</th>
+                                <th className="col-2">Device Name</th>
+                                <th className="col">Serial Number</th>
+                            </tr>
                         </thead>
                         <tbody className='overflow-auto' style={{height: '50vh'}}>
                             {Array.isArray(device) && device.length > 0 ? (

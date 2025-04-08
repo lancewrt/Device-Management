@@ -8,6 +8,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import NavBar from '../NavBar/NavBar';
+import AutoSuggestInput from './AutoSuggestInput';
 
 
 
@@ -26,10 +27,10 @@ const AddRecord = () => {
         phone_no: '',
         email: '',
         emp_status: '',
-        department: 'Select an option',
-        designation: 'Select an option',
-        business_unit: 'Select an option',
-        location: 'Select an option',
+        department: '',
+        designation: '',
+        business_unit: '',
+        location: '',
 
         computer_name: '',
         model: '',
@@ -320,14 +321,14 @@ const AddRecord = () => {
                                             
                                         </div>
                                         <div className="col-md-4 mb-3">
-                                            <label htmlFor="serialId" className="form-label">Location</label>
-                                            <select className="form-select text-uppercase" aria-label="Default select example" name='location' id='location' value={formData.location} onChange={handleChange}>
-                                                <option selected disabled>Select an option</option>
-                                                {locations.map((location, index) => (
-                                                    <option key={index} value={location.loc_id}>{location.loc_name}</option>
-                                                ))}
-                                            </select>
-                                            {errors.location && <p style={{ color: 'red' }}>{errors.location}</p>}
+                                            <AutoSuggestInput
+                                                    label="Location"
+                                                    name="loc"
+                                                    value={formData.location}
+                                                    setFormData={setFormData}
+                                                    error={errors.location && <p style={{ color: 'red' }}>{errors.location}</p>}
+                                                    endpoint="location"
+                                            />
                                         </div>
                                     </div>
                                 </form>
@@ -336,36 +337,35 @@ const AddRecord = () => {
                                 <form className="d-flex justify-content-center">
                                     <div className="row text-start w-100 ps-3 pe-3 pb-3">
                                         <div className="col-md-4 mb-3">
-                                            <label htmlFor="department" className="form-label">Department</label>
-                                            <select className="form-select text-uppercase" aria-label="Default select example" name='department' id='department' value={formData.department} onChange={handleChange}>
-                                                <option selected disabled>Select an option</option>
-                                                {departments.map((department, index) => (
-                                                    
-                                                    <option key={index} value={department.dept_id}>{department.dept_name}</option>
-                                                ))}
-                                                
-                                            </select>
-                                            {errors.department && <p style={{ color: 'red' }}>{errors.department}</p>}
+                                            <AutoSuggestInput
+                                                    label="Department"
+                                                    name="dept"
+                                                    value={formData.department}
+                                                    setFormData={setFormData}
+                                                    error={errors.department && <p style={{ color: 'red' }}>{errors.department}</p>}
+                                                    endpoint="department"
+                                            />
+                                
                                         </div>
                                         <div className="col-md-4 mb-3">
-                                            <label htmlFor="designation" className="form-label">Designation</label>
-                                            <select className="form-select text-uppercase" aria-label="Default select example" name='designation' id='designation' value={formData.designation} onChange={handleChange}>
-                                                <option selected disabled>Select an option</option>
-                                                {designations.map((designation, index) => (
-                                                    <option key={index} value={designation.des_id}>{designation.des_name}</option>
-                                                ))}
-                                            </select>
-                                            {errors.designation && <p style={{ color: 'red' }}>{errors.designation}</p>}
+                                            <AutoSuggestInput
+                                                    label="Designation"
+                                                    name="des"
+                                                    value={formData.designation}
+                                                    setFormData={setFormData}
+                                                    error={errors.designation && <p style={{ color: 'red' }}>{errors.designation}</p>}
+                                                    endpoint="designation"
+                                            />
                                         </div>
                                         <div className="col-md-4 mb-3">
-                                            <label htmlFor="business_unit" className="form-label">Business Unit</label>
-                                            <select className="form-select text-uppercase" aria-label="Default select example" name='business_unit' id='business_unit' value={formData.business_unit} onChange={handleChange}>
-                                                <option selected disabled>Select an option</option>
-                                                {business_units.map((business_unit, index) => (
-                                                    <option key={index} value={business_unit.bu_id}>{business_unit.bu_name}</option>
-                                                ))}
-                                            </select>
-                                            {errors.business_unit && <p style={{ color: 'red' }}>{errors.business_unit}</p>}
+                                            <AutoSuggestInput
+                                                    label="Business Unit"
+                                                    name="bu"
+                                                    value={formData.business_unit}
+                                                    setFormData={setFormData}
+                                                    error={errors.business_unit && <p style={{ color: 'red' }}>{errors.business_unit}</p>}
+                                                    endpoint="business_unit"
+                                            />
                                         </div>
  
                                         <div className="col-md-12">

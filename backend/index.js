@@ -36,7 +36,7 @@ async function createPdf(input, output,devices) {
 
         // Fill out form fields
         form.getTextField('Name').setText(`${device.fname} ${device.lname}`.trim());
-        form.getTextField('Date').setText(device.release_date ? device.release_date.split(" ")[0] : "");
+        //form.getTextField('Date').setText(device.release_date ? device.release_date.split(" ")[0] : "");
         form.getTextField('Serial Number').setText(device.serial_number);
         form.getTextField('Specification').setText(device.specs);
         form.getTextField('Model').setText(device.model);
@@ -464,6 +464,32 @@ app.post('/add-entry', (req, res) => {
         }
     });
 });
+
+app.get('/api/:type/search', async (req, res) => {
+    const { type } = req.params;
+    const q = req.query.q;
+    const table = type.replace('-', '_');
+    const column = `${type === 'department' ? 'dept' : type === 'business_unit' ? 'bu' : type.slice(0, 3)}_name`;
+    const [rows] = await dbPromise.query(`SELECT * FROM ${table} WHERE ${column} LIKE ?`, [`%${q}%`]);
+    res.json(rows);
+});
+
+app.post('/api/:type', async (req, res) => {
+    const { type } = req.params;
+    const name = req.body.name.toUpperCase();
+    const table = type.replace('-', '_');
+    const prefix = type === 'department' ? 'dept' : type === 'business-units' ? 'bu' : type.slice(0, 3);
+    const column = `${prefix}_name`;
+    const idCol = `${prefix}_id`;
+  
+    // Check existing
+    const [exists] = await dbPromise.query(`SELECT * FROM ${table} WHERE ${column} = ?`, [name]);
+    if (exists.length > 0) return res.json(exists[0]);
+  
+    // Insert new
+    const [result] = await dbPromise.query(`INSERT INTO ${table} (${column}) VALUES (?)`, [name]);
+    res.json({ [idCol]: result.insertId, [column]: name });
+});  
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
