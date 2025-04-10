@@ -478,7 +478,7 @@ app.post('/api/:type', async (req, res) => {
     const { type } = req.params;
     const name = req.body.name.toUpperCase();
     const table = type.replace('-', '_');
-    const prefix = type === 'department' ? 'dept' : type === 'business-units' ? 'bu' : type.slice(0, 3);
+    const prefix = type === 'department' ? 'dept' : type === 'business_units' ? 'bu' : type.slice(0, 3);
     const column = `${prefix}_name`;
     const idCol = `${prefix}_id`;
   

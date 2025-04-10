@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './AddRecord.css';
+import './TurnOver.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Table, Button, Form, Card, Pagination } from "react-bootstrap";
 import { Plus, ThreeDotsVertical, ArrowRight, ArrowLeft } from "react-bootstrap-icons";
@@ -12,7 +12,7 @@ import AutoSuggestInput from './AutoSuggestInput';
 
 
 
-const AddRecord = () => {
+const TurnOver = () => {
     const navigate = useNavigate();
     const [errors, setErrors] = useState({});
     const [departments, setDepartments] = useState([]);
@@ -190,21 +190,25 @@ const AddRecord = () => {
                 isValid = false;
             }
         
-            if (formData.department === '') {
+            if (formData.department === 'Open this select menu') {
                 tempErrors.department = 'Please select a department';
                 isValid = false;
             }
 
-            if (formData.business_unit === '') {
+            if (formData.business_unit === 'Open this select menu') {
                 tempErrors.business_unit = 'Please select a business unit';
                 isValid = false;
             }
 
-            if (formData.designation === '') {
+            if (formData.designation === 'Open this select menu') {
                 tempErrors.designation = 'Please select a designation';
                 isValid = false;
             }
 
+            if (formData.designation === 'Open this select menu') {
+                tempErrors.deviceType = 'Please select a device type';
+                isValid = false;
+            }
 
             if (formData.brand === 'Open this select menu') {
                 tempErrors.brand = 'Please select a device brand';
@@ -216,7 +220,7 @@ const AddRecord = () => {
             isValid = false;
             }
 
-            if (formData.location === '' ) {
+            if (!formData.location.trim()) {
                 tempErrors.location = 'Location is required';
                 isValid = false;
             }
@@ -270,7 +274,7 @@ const AddRecord = () => {
                     </Button> */}
                 </div>
                 
-                <h2 className='text-center fw-bold pb-2 pt-3'>Assign Device </h2>
+                <h2 className='text-center fw-bold pb-2 pt-3'>Turn Over Device</h2>
 
                 <Card> 
                     <Card.Body>
@@ -520,6 +524,7 @@ const AddRecord = () => {
                                             <option selected disabled>Select an option</option>
                                             <option value="Released">Released</option>
                                             <option value="Available">Available</option>
+                                            <option value="Available">Turn Over</option>
                                             <option value="Defective">Defective</option>
                                         </select>
                                         {errors.brand && <p style={{ color: 'red' }}>{errors.brand}</p>}
@@ -589,4 +594,4 @@ const AddRecord = () => {
     );
 };
 
-export default AddRecord;
+export default TurnOver;

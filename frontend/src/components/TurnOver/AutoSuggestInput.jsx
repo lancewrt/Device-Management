@@ -104,8 +104,7 @@ const AutoSuggestInput = ({ label, name, value, setFormData, error, endpoint }) 
               className={`list-group-item list-group-item-action ${
                 idx === highlightedIndex ? 'active' : ''
               }`}
-              //onClick={() => handleSelect(item)}
-              onMouseDown={() => handleSelect(item)}
+              onClick={() => handleSelect(item)}
               style={{ cursor: 'pointer' }}
             >
               {item[`${name}_name`] || item[`${name}_title`]}

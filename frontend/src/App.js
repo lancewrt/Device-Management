@@ -9,6 +9,7 @@ import Employees from './components/Employees/Employees';
 import AddDevice from './components/AddDevice/AddDevice';
 import DeviceList from './components/DeviceList/DeviceList';
 import DeviceInfo from './components/DeviceInfo/DeviceInfo';
+import TurnOver from './components/TurnOver/TurnOver';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route path='/devices' element={<DeviceList />}></Route>
           <Route path='/add-device' element={<AddDevice />}></Route>
           <Route path='/device-info/:id' element={<DeviceInfo />}></Route>
+          <Route path='/turn-over' element={<TurnOver />}></Route>
         </Routes>
       
       </BrowserRouter>

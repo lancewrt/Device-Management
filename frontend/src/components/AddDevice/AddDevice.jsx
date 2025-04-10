@@ -77,8 +77,9 @@ const AddDevice = () => {
 
     return (
         <div className="add-device-container">
-            <NavBar />
+            
             <div className="container">
+            <NavBar />
                 <button 
                     className="back-button"
                     onClick={() => navigate(-1)}
