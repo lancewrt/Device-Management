@@ -1,0 +1,10 @@
+.menu li{
+    border-radius: 5px;
+}
+
+.menu li:hover,
+.menu li:focus,
+.menu li:active{
+    color: #1a1a1a;
+    background-color: rgb(233, 233, 233);
+}

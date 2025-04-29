@@ -10,6 +10,8 @@ import AddDevice from './components/AddDevice/AddDevice';
 import DeviceList from './components/DeviceList/DeviceList';
 import DeviceInfo from './components/DeviceInfo/DeviceInfo';
 import TurnOver from './components/TurnOver/TurnOver';
+import AssignmentPage from './pages/AssignmentPage/AssignmentPage';
+import './assets/styles/global.css'
 
 
 function App() {
@@ -17,7 +19,9 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Main />}></Route>
+          <Route path='/old' element={<Main />}></Route>
+          <Route path='/' element={<AssignmentPage />}></Route>
+          <Route path='/add-record' element={<AddRecord />}></Route>
           <Route path='/add-record' element={<AddRecord />}></Route>
           <Route path='/view-info/:id' element={<ViewInfo />}></Route>
           <Route path='/employees' element={<Employees />}></Route>
