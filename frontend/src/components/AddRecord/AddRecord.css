@@ -22,3 +22,15 @@ body {
 link{
     text-decoration: none;
 }
+
+.nav-tabs .nav-link {
+    color: #aaa; 
+  }
+  
+  
+.nav-tabs .nav-link.active {
+    color: #000;               /* black or darker for active tab */
+    background-color: #f5f5f5; /* optional: light gray background */
+    border-color: #dee2e6 #dee2e6 #fff;
+}
+  

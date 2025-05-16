@@ -19,7 +19,7 @@ const NavBar = () => {
     ];
 
     return (
-        <nav className='bg-white vh-100 w-100 p-5 d-flex flex-column align-items-start shadow-sm'>
+        <nav className='bg-white h-100 w-100 p-5 d-flex flex-column align-items-start border-end'>
             <Link to="/" style={{ textDecoration: 'none' }}>
                 <h1 className="text-danger fw-bold">All<span className="text-success">Day</span></h1>
             </Link>

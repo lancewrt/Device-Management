@@ -96,11 +96,11 @@ const ViewAll = () => {
                     </div>
                     <div className="d-flex justify-content-start mb-2 ms-2">
                         <Form.Control 
-                                type="text" 
-                                placeholder="Search first or last name..." 
-                                value={search} 
-                                onChange={(e) => setSearch(e.target.value)} 
-                                className="me-2 w-25" 
+                            type="text" 
+                            placeholder="Search first or last name..." 
+                            value={search} 
+                            onChange={(e) => setSearch(e.target.value)} 
+                            className="me-2 w-50" 
                         />
                             
                         <Button variant="outline-secondary" className="ps-4 pe-4">Search</Button>
@@ -137,7 +137,6 @@ const ViewAll = () => {
                                         <td colSpan="5" className="text-center">No devices found.</td>
                                     </tr>
                                 )}
-                                
                             </tbody>
                         </table>
                         <div className="d-flex justify-content-end mt-3">                    
