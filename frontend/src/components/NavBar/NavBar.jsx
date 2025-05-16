@@ -19,9 +19,9 @@ const NavBar = () => {
     ];
 
     return (
-        <nav className='bg-danger p-3 pt-5'>
+        <nav className='bg-white vh-100 w-100 p-5 d-flex flex-column align-items-start shadow-sm'>
             <Link to="/" style={{ textDecoration: 'none' }}>
-                <h1 className="text-primary fw-bold">Lance<span className="text-success">Bernal</span></h1>
+                <h1 className="text-danger fw-bold">All<span className="text-success">Day</span></h1>
             </Link>
                 {/* <div>
                     <div className="top-navbar-datetime text-black">
@@ -31,17 +31,15 @@ const NavBar = () => {
                     </div>
                 </div> */}
             
-            
-            
-               
+                <ul className='w-100 m-0 p-0'>
                     {navItems.map((item) => {
                         const isActive = item.paths.includes(location.pathname) || 
                                          (item.dynamic && location.pathname.startsWith(item.dynamic));
 
                         return (
-                            <li className="nav-item" key={item.paths[0]}>
+                            <li className="list-unstyled pb-2" key={item.paths[0]}>
                                 <Link 
-                                    className={`nav-link ${isActive ? 'active' : ''}`}
+                                    className={`nav-link fs-5 ${isActive ? 'active' : ''}`}
                                     to={item.paths[0]}
                                 >
                                     {item.label}
@@ -49,7 +47,7 @@ const NavBar = () => {
                             </li>
                         );
                     })}
-                
+                </ul>
            
         </nav>
     );

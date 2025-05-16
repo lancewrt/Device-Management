@@ -79,39 +79,37 @@ const ViewAll = () => {
         return items;
     };
     return (
-        <div className="d-flex justify-content-center align-items-center" style={{margin: "auto"}}>
+        <div className="d-flex justify-content-center align-items-center w-100 min-vh-100" style={{margin: "auto"}}>
             {/* <AdminTopNavbar /> */}
             
-            <div className="bg-light w-100 row" >
+            <div className="bg-white w-100 row" >
                 <div className='col-2 p-0'>
                     <NavBar />
                 </div>
-                <div className='col'>
+                <div className='col p-5 mt-5'>
                     <div className="d-flex justify-content-end mb-3">
                         <Link to="/add-record" style={{ textDecoration: 'none' }}>
-                            <Button variant="outline-success" className="d-flex align-items-center me-4">
+                            <Button variant="outline-secondary" className="d-flex align-items-center me-4">
                                 <Plus className="me-2" /> Releasing
                             </Button>
-                        </Link>
-                        
-                        
+                        </Link>  
                     </div>
-                    <div className="d-flex justify-content-start mb-3 ms-2">
+                    <div className="d-flex justify-content-start mb-2 ms-2">
                         <Form.Control 
                                 type="text" 
                                 placeholder="Search first or last name..." 
                                 value={search} 
                                 onChange={(e) => setSearch(e.target.value)} 
-                                className="me-2 w-50" 
-                            />
+                                className="me-2 w-25" 
+                        />
                             
-                        <Button variant="primary" className="ps-4 pe-4">Search</Button>
-                        <Button variant="warning" className="ps-4 pe-4 ms-2" onClick={handleReset}>Reset</Button>
+                        <Button variant="outline-secondary" className="ps-4 pe-4">Search</Button>
+                        <Button variant="secondary" className="ps-4 pe-4 ms-2" onClick={handleReset}>Reset</Button>
                     </div>
                     <Card className="border-0">
                         <Card.Body className="border-0">
                         <div className='' style={{height: '50vh', width: '100%', display: 'inline-block'}}>
-                        <table className='table table-striped  table-hover table-bordered' >
+                        <table className='table  table-hover' >
                             <thead>
                                 <tr className="row text-center">    
                                     <th className="col-3">Name</th>
@@ -142,8 +140,7 @@ const ViewAll = () => {
                                 
                             </tbody>
                         </table>
-                        <div className="d-flex justify-content-end mt-3">
-                                            
+                        <div className="d-flex justify-content-end mt-3">                    
                             <Pagination>
                                 <Pagination.Prev disabled={page === 1} onClick={() => setPage(page - 1)} />
 

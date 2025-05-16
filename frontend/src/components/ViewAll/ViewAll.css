@@ -1,4 +1,4 @@
-body {
+/* body {
     background-color: #F2EDEB;
     color: #444444;
 }
@@ -15,4 +15,17 @@ body {
 .form-label {
     font-weight: bold;
     color: #EDDF13;
-}
+} */
+
+.pagination .page-link {
+    background-color: #f5f5f5;  /* light gray for inactive */
+    color: #6c757d;             /* medium gray text */
+    border-color: #dee2e6;      /* optional: light border */
+  }
+
+.pagination .page-item.active .page-link {
+    background-color: #e0e0e0; /* light gray background */
+    border-color: #e0e0e0;
+    color: #000; /* Optional: set text color to black */
+  }
+  
