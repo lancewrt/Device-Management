@@ -19,21 +19,24 @@ const NavBar = () => {
     ];
 
     return (
-        <nav className='bg-danger p-3 pt-5'>
-            <Link to="/" style={{ textDecoration: 'none' }}>
-                <h1 className="text-primary fw-bold">Lance<span className="text-success">Bernal</span></h1>
-            </Link>
-                {/* <div>
+        <div className='pb-4'>
+            <nav className="navbar">
+                <div className="navbar-brand">
+                    <Link to="/" style={{ textDecoration: 'none' }}>
+                        <h1 className="text-primary fw-bold">Lance<span className="text-success">Bernal</span></h1>
+                    </Link>
+                </div>
+                <div>
                     <div className="top-navbar-datetime text-black">
                         <span>{dateTime.toLocaleTimeString()}</span>
                         <span>|</span>
                         <span>{dateTime.toLocaleDateString()}</span>
                     </div>
-                </div> */}
-            
-            
-            
-               
+                </div>
+            </nav>
+
+            <nav>
+                <ul className="nav nav-pills">
                     {navItems.map((item) => {
                         const isActive = item.paths.includes(location.pathname) || 
                                          (item.dynamic && location.pathname.startsWith(item.dynamic));
@@ -49,9 +52,11 @@ const NavBar = () => {
                             </li>
                         );
                     })}
-                
-           
-        </nav>
+                </ul>
+            </nav>
+
+            <hr/>
+        </div>
     );
 };
 

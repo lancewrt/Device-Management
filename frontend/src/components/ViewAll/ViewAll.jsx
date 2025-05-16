@@ -82,89 +82,92 @@ const ViewAll = () => {
         <div className="d-flex justify-content-center align-items-center" style={{margin: "auto"}}>
             {/* <AdminTopNavbar /> */}
             
-            <div className="container pb-4" >
-                <NavBar />
-                <div className="d-flex justify-content-end mb-3">
-                    <Link to="/add-record" style={{ textDecoration: 'none' }}>
-                        <Button variant="outline-success" className="d-flex align-items-center me-4">
-                            <Plus className="me-2" /> Releasing
-                        </Button>
-                    </Link>
-                    
-                    
+            <div className="bg-light w-100 row" >
+                <div className='col-2 p-0'>
+                    <NavBar />
                 </div>
-                <div className="d-flex justify-content-start mb-3 ms-2">
-                    <Form.Control 
-                            type="text" 
-                            placeholder="Search first or last name..." 
-                            value={search} 
-                            onChange={(e) => setSearch(e.target.value)} 
-                            className="me-2 w-50" 
-                        />
+                <div className='col'>
+                    <div className="d-flex justify-content-end mb-3">
+                        <Link to="/add-record" style={{ textDecoration: 'none' }}>
+                            <Button variant="outline-success" className="d-flex align-items-center me-4">
+                                <Plus className="me-2" /> Releasing
+                            </Button>
+                        </Link>
                         
-                    <Button variant="primary" className="ps-4 pe-4">Search</Button>
-                    <Button variant="warning" className="ps-4 pe-4 ms-2" onClick={handleReset}>Reset</Button>
-                </div>
-                <Card className="border-0">
-                    <Card.Body className="border-0">
-                    <div className='' style={{height: '50vh', width: '100%', display: 'inline-block'}}>
-                    <table className='table table-striped  table-hover table-bordered' >
-                        <thead>
-                            <tr className="row text-center">    
-                                <th className="col-3">Name</th>
-                                <th className="col-2">Department</th>
-                                <th className="col-2">Business Unit</th>
-                                <th className="col-2">Device Name</th>
-                                <th className="col">Serial Number</th>
-                            </tr>
-                        </thead>
-                        <tbody className='overflow-auto' style={{height: '50vh'}}>
-                            {Array.isArray(device) && device.length > 0 ? (
-                                device.map((item, index) => (
-                                        <tr className="row text-center" key={index} onClick={() => navigate(`/device-info/${item.device_id}`)}>
-
-                                                <td className="col-3">{item.fname} {item.lname}</td>
-                                                <td className="col-2">{item.dept_name}</td>
-                                                <td className="col-2">{item.bu_name}</td>
-                                                <td className="col-2">{item.computer_name}</td>
-                                                <td className="col-3 word-wrap">{item.serial_number}</td>
-                                        
-                                        </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="5" className="text-center">No devices found.</td>
-                                </tr>
-                            )}
+                        
+                    </div>
+                    <div className="d-flex justify-content-start mb-3 ms-2">
+                        <Form.Control 
+                                type="text" 
+                                placeholder="Search first or last name..." 
+                                value={search} 
+                                onChange={(e) => setSearch(e.target.value)} 
+                                className="me-2 w-50" 
+                            />
                             
-                        </tbody>
-                    </table>
-                    <div className="d-flex justify-content-end mt-3">
-                                        
-                        <Pagination>
-                            <Pagination.Prev disabled={page === 1} onClick={() => setPage(page - 1)} />
+                        <Button variant="primary" className="ps-4 pe-4">Search</Button>
+                        <Button variant="warning" className="ps-4 pe-4 ms-2" onClick={handleReset}>Reset</Button>
+                    </div>
+                    <Card className="border-0">
+                        <Card.Body className="border-0">
+                        <div className='' style={{height: '50vh', width: '100%', display: 'inline-block'}}>
+                        <table className='table table-striped  table-hover table-bordered' >
+                            <thead>
+                                <tr className="row text-center">    
+                                    <th className="col-3">Name</th>
+                                    <th className="col-2">Department</th>
+                                    <th className="col-2">Business Unit</th>
+                                    <th className="col-2">Device Name</th>
+                                    <th className="col">Serial Number</th>
+                                </tr>
+                            </thead>
+                            <tbody className='overflow-auto' style={{height: '50vh'}}>
+                                {Array.isArray(device) && device.length > 0 ? (
+                                    device.map((item, index) => (
+                                            <tr className="row text-center" key={index} onClick={() => navigate(`/device-info/${item.device_id}`)}>
 
-                            {getPaginationItems().map((item, index) =>
-                                item === '...' ? (
-                                    <Pagination.Ellipsis key={index} />
+                                                    <td className="col-3">{item.fname} {item.lname}</td>
+                                                    <td className="col-2">{item.dept_name}</td>
+                                                    <td className="col-2">{item.bu_name}</td>
+                                                    <td className="col-2">{item.computer_name}</td>
+                                                    <td className="col-3 word-wrap">{item.serial_number}</td>
+                                            
+                                            </tr>
+                                    ))
                                 ) : (
-                                    <Pagination.Item
-                                        key={index}
-                                        active={item === page}
-                                        onClick={() => setPage(item)}
-                                    >
-                                        {item}
-                                    </Pagination.Item>
-                                )
-                            )}
+                                    <tr>
+                                        <td colSpan="5" className="text-center">No devices found.</td>
+                                    </tr>
+                                )}
+                                
+                            </tbody>
+                        </table>
+                        <div className="d-flex justify-content-end mt-3">
+                                            
+                            <Pagination>
+                                <Pagination.Prev disabled={page === 1} onClick={() => setPage(page - 1)} />
 
-                            <Pagination.Next disabled={page === totalPages} onClick={() => setPage(page + 1)} />
-                        </Pagination>
-                    </div>
-                    </div>
-                    </Card.Body>
-                </Card>
-                
+                                {getPaginationItems().map((item, index) =>
+                                    item === '...' ? (
+                                        <Pagination.Ellipsis key={index} />
+                                    ) : (
+                                        <Pagination.Item
+                                            key={index}
+                                            active={item === page}
+                                            onClick={() => setPage(item)}
+                                        >
+                                            {item}
+                                        </Pagination.Item>
+                                    )
+                                )}
+
+                                <Pagination.Next disabled={page === totalPages} onClick={() => setPage(page + 1)} />
+                            </Pagination>
+                        </div>
+                        </div>
+                        </Card.Body>
+                    </Card>
+                </div>
             </div>
         </div>
     );

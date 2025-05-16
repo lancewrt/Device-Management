@@ -5,9 +5,6 @@ import ViewAll from '../components/ViewAll/ViewAll.jsx';
 
 import React, { useState } from "react";
 
-
-
-
 const Main = () => {
     return (
         <div>
