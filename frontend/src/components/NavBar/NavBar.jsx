@@ -15,22 +15,15 @@ const NavBar = () => {
         { paths: ["/", "/add-record"], label: "Assignment" },
         
         { paths: ["/devices", "/add-device", "/device-info"], label: "Devices", dynamic: "/device-info/" },
-        { paths: ["/turn-over"], label: "Turn Over" },
+        //{ paths: ["/turn-over"], label: "Turn Over" },
     ];
 
     return (
         <nav className='bg-white h-100 w-100 p-5 d-flex flex-column align-items-start border-end'>
             <Link to="/" style={{ textDecoration: 'none' }}>
-                <h1 className="text-danger fw-bold">All<span className="text-success">Day</span></h1>
+                <h1 className="text-danger fw-bold">All<span className="text-success">Value</span></h1>
             </Link>
-                {/* <div>
-                    <div className="top-navbar-datetime text-black">
-                        <span>{dateTime.toLocaleTimeString()}</span>
-                        <span>|</span>
-                        <span>{dateTime.toLocaleDateString()}</span>
-                    </div>
-                </div> */}
-            
+                
                 <ul className='w-100 m-0 p-0'>
                     {navItems.map((item) => {
                         const isActive = item.paths.includes(location.pathname) || 
