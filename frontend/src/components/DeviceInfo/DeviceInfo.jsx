@@ -83,7 +83,7 @@ const DeviceInfo = () => {
             });
     
             console.log(response.data);
-            window.location.reload()
+            navigate('/')
         } catch (error) {
             console.log('Cannot turn over. An error occurred: ', error);
         }
