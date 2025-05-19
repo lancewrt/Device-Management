@@ -305,13 +305,14 @@ app.get('/device/:id', (req, res) => {
             bu.bu_name
 
         FROM device d
-        LEFT JOIN assignment a ON d.device_id = a.device_id
+        LEFT JOIN assignment a ON d.device_id = a.device_id AND a.return_date IS NULL
         LEFT JOIN employee e ON a.emp_id = e.emp_id
         LEFT JOIN department dep ON e.dept_id = dep.dept_id
         LEFT JOIN designation des ON e.des_id = des.des_id
         LEFT JOIN location loc ON e.loc_id = loc.loc_id
         LEFT JOIN business_unit bu ON e.bu_id = bu.bu_id
-        WHERE d.device_id = ?;
+        WHERE d.device_id = ?
+        LIMIT 1;
     `;
 
     db.query(sql, [id], (err, results) => {
@@ -326,7 +327,7 @@ app.get('/device/:id', (req, res) => {
 
         const deviceData = results[0];
 
-        // If no assignment, return only device info
+        // If device exists but has no active assignment
         if (!deviceData.ass_id) {
             return res.status(200).json({
                 device_id: deviceData.device_id,
@@ -342,7 +343,7 @@ app.get('/device/:id', (req, res) => {
             });
         }
 
-        // Otherwise, return full data with assignment and employee details
+        // Otherwise, return full info
         res.status(200).json(deviceData);
     });
 });
@@ -512,7 +513,9 @@ app.put('/turnover', (req, res) => {
         // update the assignment table
         const updateAssignment = `
             UPDATE assignment
-            SET return_date = CURDATE()
+            SET 
+                return_date = CURDATE()
+
             WHERE release_date = ? AND emp_id = ? AND device_id = ?`;
 
         db.query(updateAssignment, [release_date, emp_id, device_id], (err) => {
