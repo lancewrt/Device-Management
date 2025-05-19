@@ -60,6 +60,38 @@ const DeviceInfo = () => {
         }
     };
 
+    const handleChange = (e)=>{
+        const {value, name} = e.target;
+
+        setDevice((prev)=>({
+            ...prev,
+            [name]:value
+        }))
+    }
+
+    const turnOver = async () => {
+        try {
+            const response = await axios.put('http://localhost:5000/turnover', {
+                updatedStatus: device.updatedStatus,
+                updatedRemarks: device.updatedRemarks,
+                last_device_user: `${device.fname} ${device.lname}`,
+                emp_id: device.emp_id,
+                release_date: device.release_date,
+                device_id: device.device_id,
+                fname: device.fname,
+                lname: device.lname
+            });
+    
+            console.log(response.data);
+            window.location.reload()
+        } catch (error) {
+            console.log('Cannot turn over. An error occurred: ', error);
+        }
+    };
+    
+
+    console.log(device)
+
     return (
         <div className="d-flex justify-content-center align-items-center w-100 min-vh-100" style={{margin: "auto"}}>
         {/* <AdminTopNavbar /> */}
@@ -168,6 +200,7 @@ const DeviceInfo = () => {
                                 </Button>
                             </div>
 
+                            {/* modal */}
                             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered modal-lg">
                                         <div class="modal-content">
@@ -180,14 +213,15 @@ const DeviceInfo = () => {
                                                 <form className="d-flex justify-content-center">
                                                     <div className="row  text-start w-100 ps-3 pe-3 pt-3">
                                                         <div className="col-md-12">
-                                                            <label htmlFor="acc_username" className="form-label">Remarks</label>
-                                                            <textarea rows='3' type="text" className="form-control" id="acc_username" name='acc_username'  placeholder={device.remarks} value={device.remarks}/>
+                                                            <label htmlFor="remarks" className="form-label">Remarks</label>
+                                                            <textarea rows='3' type="text" className="form-control" id="remarks" name='updatedRemarks'
+                                                            onChange={handleChange}/>
                                                         </div>
                                                         <div className="col-md-4 mt-3">
                                                             <label htmlFor="status" className="form-label">Status</label>
-                                                            <select className="form-select text-uppercase" aria-label="Default select example" id='status' name='status' >
+                                                            <select className="form-select text-uppercase" aria-label="Default select example" id='status' name='updatedStatus' onChange={handleChange}>
                                                                 <option selected disabled>Select an option</option>
-                                                                <option value="Defective">Pending</option>
+                                                                <option value="Pending">Pending</option>
                                                                 <option value="Available">Available</option>
                                                                 <option value="Defective">Defective</option>
                                                             </select>
@@ -198,7 +232,14 @@ const DeviceInfo = () => {
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Turn Over</button>
+                                            <button 
+                                                type="button" 
+                                                class="btn btn-danger" 
+                                                // data-bs-dismiss="modal"
+                                                onClick={turnOver}
+                                            >
+                                                    Turn Over
+                                            </button>
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                         </div>
                                         </div>

@@ -112,10 +112,10 @@ const ViewAll = () => {
                         <table className='table  table-hover' >
                             <thead>
                                 <tr className="row text-center">    
-                                    <th className="col-3">Name</th>
-                                    <th className="col-2">Department</th>
-                                    <th className="col-2">Business Unit</th>
-                                    <th className="col-2">Device Name</th>
+                                    <th className="col">Name</th>
+                                    <th className="col">Department</th>
+                                    <th className="col">Business Unit</th>
+                                    <th className="col">Device Name</th>
                                     <th className="col">Serial Number</th>
                                 </tr>
                             </thead>
@@ -124,12 +124,11 @@ const ViewAll = () => {
                                     device.map((item, index) => (
                                             <tr className="row text-center" key={index} onClick={() => navigate(`/device-info/${item.device_id}`)}>
 
-                                                    <td className="col-3">{item.fname} {item.lname}</td>
-                                                    <td className="col-2">{item.dept_name}</td>
-                                                    <td className="col-2">{item.bu_name}</td>
-                                                    <td className="col-2">{item.computer_name}</td>
-                                                    <td className="col-3 word-wrap">{item.serial_number}</td>
-                                            
+                                                    <td className="col">{item.fname} {item.lname}</td>
+                                                    <td className="col">{item.dept_name}</td>
+                                                    <td className="col">{item.bu_name}</td>
+                                                    <td className="col">{item.computer_name}</td>
+                                                    <td className="col word-wrap">{item.serial_number}</td>
                                             </tr>
                                     ))
                                 ) : (

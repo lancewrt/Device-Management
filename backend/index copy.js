@@ -377,13 +377,14 @@ app.post("/add-device", (req, res) => {
 
 app.post('/add-entry', (req, res) => {
     const {
-       fname, lname, mi, phone_no, email, emp_status, computer_name, model,
-       serial_number, device_type, brand, specs, remarks, stats, last_device_user, acc_username,
-       acc_password, requestor, loc_name, dept_name, dept, des_name, des, loc, bu_name, bu
+        fname, lname, mi, phone_no, email, emp_status,
+        department, designation, business_unit, location,
+        computer_name, model, serial_number, device_type, brand, specs, remarks, status, last_device_user,
+        acc_username, acc_password, requestor
     } = req.body;
 
     db.beginTransaction(err => {
-        if (err) {  
+        if (err) {
             return res.status(500).json({ error: 'Transaction error' });
         }
 
@@ -436,7 +437,7 @@ app.post('/add-entry', (req, res) => {
                 INSERT INTO employee (fname, lname, mname, phone_no, email, emp_status, dept_id, des_id, bu_id, loc_id) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
-            db.query(insertEmployee, [fname, lname, mi, phone_no, email, emp_status, dept, des, bu, loc], (err, employeeResult) => {
+            db.query(insertEmployee, [fname, lname, mi, phone_no, email, emp_status, department, designation, business_unit, location], (err, employeeResult) => {
                 if (err) {
                     return db.rollback(() => res.status(500).json({ error: 'Failed to insert employee', details: err }));
                 }
@@ -489,43 +490,6 @@ app.post('/api/:type', async (req, res) => {
     const [result] = await dbPromise.query(`INSERT INTO ${table} (${column}) VALUES (?)`, [name]);
     res.json({ [idCol]: result.insertId, [column]: name });
 });  
-
-app.put('/turnover', (req, res) => {
-    console.log(req.body);
-    const { updatedStatus, updatedRemarks, last_device_user, emp_id, release_date, device_id, fname, lname } = req.body;
-
-    // update the device table
-    const updateDevice = `
-        UPDATE device
-        SET 
-            status = ?,
-            remarks = ?,
-            last_device_user = ?
-        WHERE device_id = ?`;
-
-    db.query(updateDevice, [updatedStatus, updatedRemarks, `${fname} ${lname}`, device_id], (err) => {
-        if (err) {
-            console.error("Device update error:", err);
-            return res.status(500).json({ error: 'Failed to update device', details: err });
-        }
-
-        // update the assignment table
-        const updateAssignment = `
-            UPDATE assignment
-            SET return_date = CURDATE()
-            WHERE release_date = ? AND emp_id = ? AND device_id = ?`;
-
-        db.query(updateAssignment, [release_date, emp_id, device_id], (err) => {
-            if (err) {
-                console.error("Assignment update error:", err);
-                return res.status(500).json({ error: 'Failed to update assignment', details: err });
-            }
-
-            res.status(200).json({ message: 'Turnover successful' });
-        });
-    });
-});
-
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
